@@ -1,0 +1,38 @@
+{
+	"manifest_version":2,
+
+	"name":"PENS RTC",
+	"description":"Riset5",
+	"version":"1.0",
+
+	"browser_action":{
+		"default_icon":"icon.png"
+		//"default_popup":"popup.html"
+	},
+
+	"icons":{
+		"16":"icon-16.png",
+		"48":"icon-48.png",
+		"64":"icon-64.png",
+		"128":"icon-128.png"
+	},
+
+	"content_scripts": [
+		{
+			"matches": ["http://192.168.43.150:8080/mahasiswa/*","http://192.168.43.150:8080/dosen/*"],
+			"js": ["jquery.min.js","socket.io.min.js","pensrtc.js"]
+		}
+	],
+
+	"background": {
+		"page": "background.html"
+	},
+
+	"externally_connectable": {
+		"matches": ["http://192.168.43.150:8080/mahasiswa/*","http://192.168.43.150:8080/dosen/*"]
+	},
+
+	"permissions":[
+		"desktopCapture","http://*/*","https://*/*","tabs","<all_urls>","activeTab"
+	]
+}

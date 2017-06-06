@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PENSRTC</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="select2/css/select2.min.css">
+    <style>
+        *{
+            border-radius: 0px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="row" id="activity_pilih_mahasiswa">
+        <div class="col-md-8 col-sm-8">
+            <div class="form-group">
+                <label for="list_mahasiswa">Pilih Mahasiswa</label>
+                <select name="list_mahasiswa[]" id="list_mahasiswa" class="form-control select2" style="border-radius: 0px;" multiple>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-4">
+            <div class="form-group">
+                <label for="list_mahasiswa" style="color: white;">Pilih Mahasiswa</label><br>
+                <button class="btn btn-primary btn-sm" style="height: 32px;" id="btn_start">Mulai</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+    </div>
+</div>
+
+<script src="jquery.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="peer.min.js"></script>
+<script src="socket.io.min.js"></script>
+<script src="socket.io-stream.min.js"></script>
+<script src="select2/js/select2.full.min.js"></script>
+<script src="window.js"></script>
+</body>
+</html>
