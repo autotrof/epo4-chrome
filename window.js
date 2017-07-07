@@ -110,6 +110,16 @@ $(document).ready(function(){
         $("#video2").prop("src", s1);
         $("#video2")[0].load();
     });
+    $("#button-switch-camera-1").click(function(){
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+        if (navigator.getUserMedia) {       
+            navigator.getUserMedia({video: true}, function(stream){
+                $("#video1").prop("src", URL.createObjectURL(stream));
+            }, function(e){
+                console.log(e);
+            });
+        }
+    });
 });
 
 function getUrlVars(){
