@@ -1,46 +1,194 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>PENSRTC</title>
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="select2/css/select2.min.css">
-    <style>
+    <title>DESAIN 1</title>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="fontawesome/css/font-awesome.min.css">
+    <style type="text/css">
         *{
-            border-radius: 0px;
+            padding: 0px;
+        }
+        .padding{
+            padding: 5px;
+        }
+        .head-chat{
+            border-left: 1px solid #484848;
+            border-right: 1px solid #484848;
+            background-color: #484848;
+            color: white;
+            padding: 10px;
+        }
+        .chat-box:before{
+            content: ' ';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: calc(100% - 20px);
+            height: calc(100% - 15px);
+            z-index: 1;
+            opacity: 0.2;
+            background-image: url('bg.png');
+            background-repeat: no-repeat;
+            background-position: 50% 0;
+            -ms-background-size: cover;
+            -o-background-size: cover;
+            -moz-background-size: cover;
+            -webkit-background-size: cover;
+            background-size: cover;
+            margin: 10px;
+        }
+        .chat-box{
+            border: 1px solid #d4d4d4;
+            width: 100%;
+            height: 450px;
+            overflow-y: scroll;
+            overflow-x: hidden; 
+            background-color: rgba(215, 222, 158, 0.06);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+         
+        /* Track */
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+        }
+         
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            /*background: rgba(255,0,0,0.8); */
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+        }
+        ::-webkit-scrollbar-thumb:window-inactive {
+            /*background: rgba(100,100,100,0.4); */
+        }
+        #button-switch-camera-1{
+            top:7px;
+            right:5px;
+        }
+        #button-switch-position-1{
+            top:41px;
+            right:5px;
+        }
+        #button-switch-camera-2{
+            top:6px;
+            right:5px;
+        }
+        #button-switch-position-2{
+            top:26px;
+            right:5px;
+        }
+        .btn-switch-1{
+            position:absolute;
+            padding:10px;
+            color:white;
+            background-color:rgba(0,0,0,0.5);
+            z-index:1000;
+            transition:0.2s;
+            cursor: pointer;
+        }
+        .btn-switch-1:hover{
+            background-color: rgba(0,0,0,0.8);
+        }
+        .btn-switch-2{
+            position:absolute;
+            padding:5px;
+            font-size: 8pt;
+            color:white;
+            background-color:rgba(0,0,0,0.5);
+            z-index:1000;
+            transition:0.2s;
+            cursor: pointer;
+        }
+        .btn-switch-2:hover{
+            background-color: rgba(0,0,0,0.8);
+        }
+        #chat-input-wrapper{
+            background: rgb(221, 221, 221);
+            padding: 10px;
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            width: calc(100% - 10px);
+            z-index: 1000;
+        }
+        #chat-input{
+            background-color: white !important;
+        }
+        .hide{
+            display: none;
+        }
+        #first-step{
+            width: 100%;
+            height: 100%;
+            padding: 0px;
+        }
+        #list-mahasiswa{
+            
+        }
+        #wrapper-list-mahasiswa{
+            position: absolute;
+            left: calc(50% - 25px);
+            top:50%;
         }
     </style>
 </head>
-<body>
-
-<div class="container">
-
-    <div class="row" id="activity_pilih_mahasiswa">
-        <div class="col-md-8 col-sm-8">
-            <div class="form-group">
-                <label for="list_mahasiswa">Pilih Mahasiswa</label>
-                <select name="list_mahasiswa[]" id="list_mahasiswa" class="form-control select2" style="border-radius: 0px;" multiple>
-                </select>
+<body style="padding:0px 40px;">
+    <div id="first-step" class="hide">
+        <div class="input-group-btn" id="wrapper-list-mahasiswa">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih Mahasiswa <span class="caret"></span></button>
+            <ul class="dropdown-menu" id="list-mahasiswa">
+            </ul>
+        </div>
+    </div>
+    <div id="second-step" class="hide">
+        <div class="row">
+            <div class="col-md-8 padding">
+                <div id="button-switch-camera-1" class="btn-switch-1">
+                    <i class="fa fa-video-camera"></i>
+                </div>
+                <div id="button-switch-position-1" class="btn-switch-source btn-switch-1">
+                    <i class="fa fa-external-link fa-rotate-180"></i>
+                </div>
+                <video width="100%" height="490" id="video1" autoplay>
+                </video>
+            </div>
+            <div class="col-md-4 padding">
+                <div class="head-chat">
+                    Head Chat should be black
+                </div>
+                <div class="chat-box">
+                    <div id="chat-input-wrapper">
+                        <div class="input-group">
+                            <input class="form-control" id="chat-input" placeholder="Ketik pesan"></input>
+                            <span class="input-group-btn">
+                                <button class="btn btn-secondary" type="button"><i class="fa fa-send"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-md-4 col-sm-4">
-            <div class="form-group">
-                <label for="list_mahasiswa" style="color: white;">Pilih Mahasiswa</label><br>
-                <button class="btn btn-primary btn-sm" style="height: 32px;" id="btn_start">Mulai</button>
+        <div class="row" style="background-color:black;">
+            <div class="col-md-3 padding">
+                <div id="button-switch-camera-2" class="btn-switch-2">
+                    <i class="fa fa-video-camera"></i>
+                </div>
+                <div id="button-switch-position-2" class="btn-switch-source btn-switch-2">
+                    <i class="fa fa-external-link"></i>
+                </div>
+                <video width="100%" height="180" id="video2" autoplay>
+                </video>
+            </div>
+            <div class="col-md-9 padding">  
+
             </div>
         </div>
     </div>
-    <div class="row">
-
-    </div>
-</div>
-
-<script src="jquery.min.js"></script>
-<script src="bootstrap/js/bootstrap.min.js"></script>
-<script src="peer.min.js"></script>
-<script src="socket.io.min.js"></script>
-<script src="socket.io-stream.min.js"></script>
-<script src="select2/js/select2.full.min.js"></script>
-<script src="window.js"></script>
+    <script type="text/javascript" src="socket.io.min.js"></script>
+    <script type="text/javascript" src="peer.min.js"></script>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="window.js"></script>
 </body>
 </html>

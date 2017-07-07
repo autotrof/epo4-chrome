@@ -18,5 +18,8 @@ chrome.runtime.onMessageExternal.addListener(
     function(request, sender, sendResponse) {
         if(request.from=='dosen'){
             chrome.windows.create({url:"window.html?as=dosen",state:"maximized"},function(newWindow){});
+        }else if(request.from=='mahasiswa'){
+            chrome.windows.create({url:"window.html?as=mahasiswa&to="+request.to,state:"maximized"},function(newWindow){});
         }
-    });
+    }
+);
