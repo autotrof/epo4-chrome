@@ -178,6 +178,7 @@
         div.message.right div.message-inner{
             margin-left: 20px;
             box-shadow: -1px 1px 1px #adadad;
+            background-color: #dcf8c6;
         }
         textarea {
             resize: none;
@@ -188,29 +189,35 @@
             margin-bottom: 5px;
         }
         div.message.left .header-message{
-            color: red;
+            color: #337ab7;
         }
         div.message.right .header-message{
             text-align: right;
-            color: blue;
+            color: #a94442;
         }
         div.triangle{
-            background-image: url('download.png');
             width: 30px;
             height: 30px;
             position: absolute;
-            filter:brightness(200%);
         }
         div.message.left div.triangle{
+            background-image: url('download.png');
+            filter:brightness(200%);
             top: 0;
             left: 0;
         }
         div.message.right div.triangle{
+            background-position: right;
+            background-repeat: no-repeat; 
+            background-image: url('download2.png');
             top: 0;
-            right: -20;
-            transform: scale(-1, 1);
+            right: -20px
         }
         div.message.left .message-text{
+            text-align: left;
+        }
+        div.message.right .message-text{
+            text-align: right;
         }
         div.message-time{
             color: cadetblue;
