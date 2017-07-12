@@ -17,7 +17,7 @@
             color: white;
             padding: 10px;
         }
-        .chat-box:before{
+        /*.chat-box:before{
             content: ' ';
             display: block;
             position: absolute;
@@ -36,14 +36,27 @@
             -webkit-background-size: cover;
             background-size: cover;
             margin: 10px;
-        }
+        }*/
+        /*div#bg{
+            background-image: url('bg.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            width: calc(100% - 20px);
+            height: calc(100% - 15px);
+            position: absolute;
+            top: 5px;
+            left: 5px;
+        }*/
         .chat-box{
             border: 1px solid #d4d4d4;
             width: 100%;
             height: 450px;
-            overflow-y: scroll;
+            overflow-y: hidden;
             overflow-x: hidden; 
-            background-color: rgba(215, 222, 158, 0.06);
+            /*background-image: url('bg.png');*/
+            /*background-color: rgba(215, 222, 158, 0.06);*/
+            /*background-color: gray;*/
         }
         ::-webkit-scrollbar {
             width: 6px;
@@ -56,7 +69,7 @@
          
         /* Handle */
         ::-webkit-scrollbar-thumb {
-            /*background: rgba(255,0,0,0.8); */
+            background: rgba(0,0,0,0.8); 
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
         }
         ::-webkit-scrollbar-thumb:window-inactive {
@@ -67,7 +80,7 @@
             right:5px;
         }
         #button-switch-position-1{
-            top:41px;
+            top:6px;
             right:5px;
         }
         #button-switch-camera-2{
@@ -131,6 +144,84 @@
             left: calc(50% - 25px);
             top:50%;
         }
+        #chat-display{
+            height: calc(100% - 114px);
+            width: 100%;
+            overflow-x:auto;
+            overflow-y:scroll;
+            padding: 20px;
+            background-image: url('bg3.png');
+            background-color: rgba(205, 210, 130, 0.32);
+        }
+        div.message{
+            position: relative;
+            width: calc(100% - 90px);
+            opacity: 1;
+            margin-bottom: 10px;
+        }
+        div.message.right{
+            margin-left: 70px;
+        }
+        div.message-inner{
+            background-color: white;
+            border-radius: 3px;
+            padding: 12px;
+            z-index: 11000;
+            font-size: 13px;
+            position: relative;
+            box-shadow: 1px 2.5px 1px #adadad;
+        }
+        div.message.left div.message-inner{
+            margin-left: 20px;
+            box-shadow: 1px 1px 1px #adadad;
+        }
+        div.message.right div.message-inner{
+            margin-left: 20px;
+            box-shadow: -1px 1px 1px #adadad;
+        }
+        textarea {
+            resize: none;
+        }
+        div.header-message{
+            width: 100%;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        div.message.left .header-message{
+            color: red;
+        }
+        div.message.right .header-message{
+            text-align: right;
+            color: blue;
+        }
+        div.triangle{
+            background-image: url('download.png');
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            filter:brightness(200%);
+        }
+        div.message.left div.triangle{
+            top: 0;
+            left: 0;
+        }
+        div.message.right div.triangle{
+            top: 0;
+            right: -20;
+            transform: scale(-1, 1);
+        }
+        div.message.left .message-text{
+        }
+        div.message-time{
+            color: cadetblue;
+            margin-top: 10px;
+        }
+        div.message.left div.message-time{
+            text-align: right;
+        }
+        div.message.right div.message-time{
+            text-align: left;
+        }
     </style>
 </head>
 <body style="padding:0px 40px;">
@@ -144,9 +235,11 @@
     <div id="second-step" class="hide">
         <div class="row">
             <div class="col-md-8 padding">
+                <!--
                 <div id="button-switch-camera-1" class="btn-switch-1">
                     <i class="fa fa-video-camera"></i>
                 </div>
+                -->
                 <div id="button-switch-position-1" class="btn-switch-source btn-switch-1">
                     <i class="fa fa-external-link fa-rotate-180"></i>
                 </div>
@@ -155,16 +248,71 @@
             </div>
             <div class="col-md-4 padding">
                 <div class="head-chat">
-                    Head Chat should be black
+                    Chat Box
                 </div>
                 <div class="chat-box">
+                    <div id="chat-display">
+                        <div class="message left">
+                            <div class="triangle"></div>
+                            <div class="message-inner">
+                                <div class="header-message left">Nama Dosen</div>
+                                <div class="message-text">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                </div>
+                                <div class="message-time">
+                                    <small>10:00</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message right">
+                            <div class="triangle"></div>
+                            <div class="message-inner">
+                                <div class="header-message">Nama Dosen</div>
+                                <div class="message-text">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                </div>
+                                <div class="message-time">
+                                    <small>10:00</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message left">
+                            <div class="triangle"></div>
+                            <div class="message-inner">
+                                <div class="header-message left">Nama Dosen</div>
+                                <div class="message-text">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                </div>
+                                <div class="message-time">
+                                    <small>10:00</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="bg"></div>
                     <div id="chat-input-wrapper">
-                        <div class="input-group">
+                        <textarea class="form-control" rows="4" id="chat-input" placeholder="Ketik pesan"></textarea>
+                        <!-- <div class="input-group">
                             <input class="form-control" id="chat-input" placeholder="Ketik pesan"></input>
                             <span class="input-group-btn">
                                 <button class="btn btn-secondary" type="button"><i class="fa fa-send"></i></button>
                             </span>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -172,12 +320,12 @@
         <div class="row" style="background-color:black;">
             <div class="col-md-3 padding">
                 <div id="button-switch-camera-2" class="btn-switch-2">
-                    <i class="fa fa-video-camera"></i>
+                    <i id="camera-switch-icon" class="fa fa-video-camera"></i>
                 </div>
                 <div id="button-switch-position-2" class="btn-switch-source btn-switch-2">
                     <i class="fa fa-external-link"></i>
                 </div>
-                <video width="100%" height="180" id="video2" autoplay data-main="false">
+                <video width="100%" height="180" id="video2" autoplay muted data-main="false">
                 </video>
             </div>
             <div class="col-md-9 padding">  
