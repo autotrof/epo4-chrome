@@ -71,6 +71,7 @@ $(document).ready(function(){
                     '</div>'+
                 '</div>'
             );
+            $("#chat-display").animate({ scrollTop: $("#chat-display")[0].scrollHeight}, 500);
         });
         socket.on('other message',function(m){
             $("#chat-display").append('' +
@@ -87,6 +88,7 @@ $(document).ready(function(){
                     '</div>'+
                 '</div>'
             );
+            $("#chat-display").animate({ scrollTop: $("#chat-display")[0].scrollHeight}, 500);
         });
         /*navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
         if (navigator.getUserMedia) {       
@@ -157,6 +159,7 @@ $(document).ready(function(){
                     '</div>'+
                 '</div>'
             );
+            $("#chat-display").animate({ scrollTop: $("#chat-display")[0].scrollHeight}, 500);
         });
         socket.on('other message',function(m){
             $("#chat-display").append('' +
@@ -173,6 +176,7 @@ $(document).ready(function(){
                     '</div>'+
                 '</div>'
             );
+            $("#chat-display").animate({ scrollTop: $("#chat-display")[0].scrollHeight}, 500);
         });
 
         $("#list-mahasiswa").on('click','li',function(){
