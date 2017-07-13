@@ -57,7 +57,36 @@ $(document).ready(function(){
         );*/
             
         socket.on('message',function(m){
-            console.log(m);
+            $("#chat-display").append('' +
+                '<div class="message right">'+
+                    '<div class="triangle"></div>'+
+                    '<div class="message-inner">'+
+                        '<div class="header-message">Nama Dosen</div>'+
+                        '<div class="message-text">'+
+                            m.text+
+                        '</div>'+
+                        '<div class="message-time">'+
+                            '<small>10:00</small>'+
+                        '</div>'+
+                    '</div>'+
+                '</div>'
+            );
+        });
+        socket.on('other message',function(m){
+            $("#chat-display").append('' +
+                '<div class="message left">'+
+                    '<div class="triangle"></div>'+
+                    '<div class="message-inner">'+
+                        '<div class="header-message">Nama Dosen</div>'+
+                        '<div class="message-text">'+
+                        m.text+
+                        '</div>'+
+                        '<div class="message-time">'+
+                            '<small>10:00</small>'+
+                        '</div>'+
+                    '</div>'+
+                '</div>'
+            );
         });
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
         if (navigator.getUserMedia) {       
@@ -114,7 +143,36 @@ $(document).ready(function(){
             });
         });
         socket.on('message',function(m){
-            console.log(m);
+            $("#chat-display").append('' +
+                '<div class="message right">'+
+                    '<div class="triangle"></div>'+
+                    '<div class="message-inner">'+
+                        '<div class="header-message">Nama Dosen</div>'+
+                        '<div class="message-text">'+
+                            m.text+
+                        '</div>'+
+                        '<div class="message-time">'+
+                            '<small>10:00</small>'+
+                        '</div>'+
+                    '</div>'+
+                '</div>'
+            );
+        });
+        socket.on('other message',function(m){
+            $("#chat-display").append('' +
+                '<div class="message left">'+
+                    '<div class="triangle"></div>'+
+                    '<div class="message-inner">'+
+                        '<div class="header-message">Nama Dosen</div>'+
+                        '<div class="message-text">'+
+                        m.text+
+                        '</div>'+
+                        '<div class="message-time">'+
+                            '<small>10:00</small>'+
+                        '</div>'+
+                    '</div>'+
+                '</div>'
+            );
         });
 
         $("#list-mahasiswa").on('click','li',function(){
