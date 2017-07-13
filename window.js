@@ -34,7 +34,7 @@ $(document).ready(function(){
             ["screen","window"],
             function(screedID){
                 navigator.webkitGetUserMedia({
-                    audio:true,
+                    audio:false,
                     video:{
                         mandatory:{
                             chromeMediaSource:"desktop",
