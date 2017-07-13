@@ -30,7 +30,7 @@ $(document).ready(function(){
         $("#second-step").removeClass('hide');
         var conn = peer.connect(parameters['to']);
         dosen_token = parameters['to'];
-        /*chrome.desktopCapture.chooseDesktopMedia(
+        chrome.desktopCapture.chooseDesktopMedia(
             ["screen","window"],
             function(screedID){
                 navigator.webkitGetUserMedia({
@@ -54,7 +54,7 @@ $(document).ready(function(){
                     console.log("Some kind of error");
                 });
             }
-        );*/
+        );
             
         socket.on('message',function(m){
             $("#chat-display").append('' +
@@ -88,7 +88,7 @@ $(document).ready(function(){
                 '</div>'
             );
         });
-        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+        /*navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
         if (navigator.getUserMedia) {       
             navigator.getUserMedia({audio:true, video: true}, function(stream){
                 $("#video2").prop("src", URL.createObjectURL(stream));
@@ -102,7 +102,7 @@ $(document).ready(function(){
             }, function(e){
                 console.log(e);
             });
-        }
+        }*/
         $("#chat-input").keydown(function (e) {
             if (e.keyCode === 13 && e.ctrlKey) {
                 $(this).val(function(i,val){
