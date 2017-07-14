@@ -1,5 +1,8 @@
 /**
  * Created by Agung on 6/2/2017.
+ FILE INI BERFUNGSI UNTUK MENERAPKAN PERUBAHAN PADA HALAMAN BIMBINGAN 
+ FILE INI AKAN MERUBAH HALAMAN 222.124.212.175 DAN MENAMBAHKAN MENU BIMBINGAN. 
+ JIKA DI KLIK MAKA AKAN MELAKUKAN REQUEST KE FILE BACKGROUND.JS UNTUK MEMBUKA FILE WINDOW.HTML
  */
 
 $("#logout-button").remove();
@@ -10,19 +13,20 @@ var port = 8443;
 var socket = io.connect('http://'+host+':'+port);
 
 if(urlLocation[3]=='dosen' || urlLocation[3]=='dosen#'){
+    //melakukan request token untuk mengambil tokenya sendiri sebagai dosen dan dilempar ke window.js
     socket.emit('request token', {as:"dosen"});
     socket.on('token',function(token){
-        // console.log(token);
         $("#main-menu").append('' +
             '<li id="open-bimbingan-button" onclick="chrome.runtime.sendMessage(\''+chromeId+'\', {from:\'dosen\',token:\''+token+'\'});">' +
-            '<a href="#"><i class="icon-camera"></i><span>Bimbingan Online</span></a>' +
+                '<a href="#"><i class="icon-camera"></i><span>Bimbingan Online</span></a>' +
             '</li>' +
             '<li id="logout-button">' +
-            '<a href="/logout"><i class="icon-lock"></i><span>Keluar</span></a>' +
+                '<a href="/logout"><i class="icon-lock"></i><span>Keluar</span></a>' +
             '</li>'
         );
     });
-}else{
+}else if(urlLocation[3]=='mahasiswa' || urlLocation[3]=='mahasiswa#'){
+    //melakukan request token untuk mengambil tokenya sendiri sebagai mahasiswa dan mengambil token dosen 1 dan dosen 2 dan dilempar ke window.js
     socket.emit('request token', {as:"mahasiswa"});
     socket.on('token and list dosen',function(data){
         console.log(data);

@@ -1,5 +1,6 @@
 /**
  * Created by Agung on 6/2/2017.
+ FILE INI BERFUNGSI UNTUK MENERIMA REQUEST DARI BROWSER DAN MEMBUKA WINDOW.HTML
  */
 
 chrome.runtime.onMessageExternal.addListener(
