@@ -185,7 +185,7 @@
             text-align: left;
         }
         div.message.right .message-text{
-            text-align: right;
+            text-align: left;
         }
         div.message-time{
             color: cadetblue;
@@ -196,12 +196,15 @@
             text-align: right;
         }
         div.message.right div.message-time{
-            text-align: left;
+            text-align: right;
         }
         video{
             background-image: url("poster-loading.jpeg");
             background-size: 100% 100%;
             background-repeat: no-repeat;
+        }
+        .progress{
+            height: 10px;
         }
     </style>
 </head>
@@ -216,16 +219,8 @@
     <div id="second-step" class="hide">
         <div class="row">
             <div class="col-md-8 padding">
-                <!--
-                <div id="button-switch-camera-1" class="btn-switch-1">
-                    <i class="fa fa-video-camera"></i>
-                </div>
-                -->
                 <div class="row">
                     <div class="col-md-12 padding">
-                        <!-- <div id="button-switch-position-1" class="btn-switch-source btn-switch-1">
-                            <i class="fa fa-external-link fa-rotate-180"></i>
-                        </div> -->
                         <video style="margin-right:10px;width:calc(100% - 10px);height:490px;" id="video1" data-main="true" autoplay>
                         </video>
                     </div>
@@ -235,9 +230,6 @@
                         <div id="button-switch-camera-2" class="btn-switch-2" data-status="sharedesktop">
                             <i id="camera-switch-icon" class="fa fa-video-camera"></i>
                         </div>
-                        <!-- <div id="button-switch-position-2" class="btn-switch-source btn-switch-2">
-                            <i class="fa fa-external-link"></i>
-                        </div> -->
                         <video style="margin-right:10px;width:calc(100% - 10px);" id="video2" autoplay muted data-main="false">
                         </video>
                     </div>
@@ -252,16 +244,15 @@
                 </div>
                 <div class="chat-box">
                     <div id="chat-display">
+
                     </div>
                     <div id="bg"></div>
                     <div id="chat-input-wrapper">
-                        <textarea disabled class="form-control" rows="4" id="chat-input" placeholder="Ketik pesan"></textarea>
-                        <!-- <div class="input-group">
-                            <input class="form-control" id="chat-input" placeholder="Ketik pesan"></input>
-                            <span class="input-group-btn">
-                                <button class="btn btn-secondary" type="button"><i class="fa fa-send"></i></button>
-                            </span>
-                        </div> -->
+                        <textarea style="width:80%;display:inline;" disabled class="form-control" rows="4" id="chat-input" placeholder="Ketik pesan"></textarea>
+                        <div style="position: absolute;bottom: 20px;width: 20%;height: 50px;border: 0;font-size: 25px;right: 10px;text-align: center;cursor:pointer;">
+                            <i class="fa fa-paperclip"></i>
+                            <input type="file" id="file-upload" style="opacity:0;opacity: 0;width: 100%;height: 100%;position: absolute;border: 0;bottom: 10px;">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -272,6 +263,7 @@
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="client.js"></script>
     <script type="text/javascript" src="window.js"></script>
 </body>
 </html>

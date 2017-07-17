@@ -10,8 +10,8 @@ const port = 8443;
 var stackstream;
 var token = parameters['token'];
 var initializer = false;
+var uploader;
 var peerConnectionHandler = function(conn){
-    console.log("There is connection, im the initializer");
     initializer = true;
 }
 var peerErrorHandler = function(err){
@@ -31,50 +31,35 @@ var peerCallHandler = function(call){
     });
 }
 var socketMessageHandler = function(data){
-    appendChat("self","Anda",data.text,data.time,500);
-    /*$("#chat-display").append('' +
-        '<div class="message right">'+
-            '<div class="triangle"></div>'+
-            '<div class="message-inner">'+
-                '<div class="header-message">Anda</div>'+
-                '<div class="message-text">'+
-                    data.text.replace(/\n/g, "<br />")+
-                '</div>'+
-                '<div class="message-time">'+
-                    '<small>'+data.time+'</small>'+
-                '</div>'+
-            '</div>'+
-        '</div>'
-    );
-    $("#chat-display").animate({ scrollTop: $("#chat-display")[0].scrollHeight}, 500);*/
+    appendChat("self","Anda",data.text,data.time,500,data.type,data.status,data.key,data.progress);
 }
 var socketOtherMessagehandler = function(data){
-    appendChat("other",data.from,data.text,data.time,500);
-    /*$("#chat-display").append('' +
-        '<div class="message left">'+
-            '<div class="triangle"></div>'+
-            '<div class="message-inner">'+
-                '<div class="header-message">'+data.from+'</div>'+
-                '<div class="message-text">'+
-                data.text.replace(/\n/g, "<br />")+
-                '</div>'+
-                '<div class="message-time">'+
-                    '<small>'+data.time+'</small>'+
-                '</div>'+
-            '</div>'+
-        '</div>'
-    );
-    $("#chat-display").animate({ scrollTop: $("#chat-display")[0].scrollHeight}, 500);*/
+    appendChat("other",data.from,data.text,data.time,500,data.type,data.status,data.key,data.progress);
+}
+var socketStartUploadFileHandler = function(data){
+    appendChat(data.from_info,data.from,data.text,data.time,500,data.type,data.status,data.key,data.progress);
+}
+var socketProgressUploadFileHandler = function(data){
+    $("div.message[data-key='"+data.key+"']").data('status',data.status);
+    $("div.message[data-key='"+data.key+"'] .progress .progress-bar").attr('style','width : '+data.progress+'%');
+    $("div.message[data-key='"+data.key+"'] .progress .progress-bar").attr('aria-valuenow',data.progress);
+    $("div.message[data-key='"+data.key+"'] .progress .progress-bar span").text(data.progress+'% Complete');
+}
+var socketCompleteUploadFileHandler = function(data){
+    $("div.message[data-key='"+data.key+"']").data('status',data.status);
+    $("div.message[data-key='"+data.key+"']").find('div.progress').remove();
+    $("div.message[data-key='"+data.key+"']").find('img').wrap('<a download href="http://'+host+':'+port+'/'+parameters['as']+'/download_file_chat/'+data.file+'"></a>');
 }
 var olderMessageHandler = function (data) {
     $.each(data,function(key,object){
-        var from;
+        var from,type = 'text';
         if((parameters['as']=='mahasiswa' && object.by==0) || (parameters['as']=='dosen' && object.by==1)) from = "self";
         else from = "other";
         var nama;
         if(from=="self") nama = "Anda";
         else nama = parameters['as']=='mahasiswa'?object.mahasiswa.nama:object.dosen.nama;
-        appendChat(from,nama,object.chat,moment(object.created_at).calendar());
+        if(object.file!=null) type = 'file'; 
+        appendChat(from,nama,object.chat,moment(object.created_at).calendar(),null,type,"complete",null,null,object.file);
     });
 }
 var chatHandler = function(socket,other_token){
@@ -118,7 +103,7 @@ var chromeDesktopShared = function(other_token, init, peer){
         }
     );
 }
-var cameraSwitch = function(peer,other_token){
+var setCameraSwitchListener = function(peer,other_token){
     var theStream = null;
     $("#button-switch-camera-2").click(function(){
         if($(this).data('status')=='sharedesktop'){
@@ -138,6 +123,8 @@ var cameraSwitch = function(peer,other_token){
                 });
             }
             $(this).data('status','videocall');
+            $("#camera-switch-icon").removeClass("fa-desktop");
+            $("#camera-switch-icon").addClass("fa-video-camera");
         }else{
             if(theStream!=null && theStream!=undefined) theStream.stop();
             chrome.desktopCapture.chooseDesktopMedia(
@@ -165,6 +152,8 @@ var cameraSwitch = function(peer,other_token){
                 }
             );
             $(this).data('status','sharedesktop');
+            $("#camera-switch-icon").removeClass("fa-video-camera");
+            $("#camera-switch-icon").addClass("fa-desktop");
         }
     });
 }
@@ -180,20 +169,7 @@ $(document).ready(function(){
         dosen_token = parameters['to'];
         socket.emit("joining room",dosen_token);
         socket.on("joining room response",function(res){
-            socket.on('message',socketMessageHandler);
-            socket.on('other message',socketOtherMessagehandler);
-            chatHandler(socket,dosen_token);
-            peer = new Peer(token,{host:host,port:port,path:'/peer'});
-            var conn = peer.connect(dosen_token);
-            peer.on('connection',peerConnectionHandler);
-            peer.on('error',peerErrorHandler);
-            peer.on('call',peerCallHandler);
-            if(conn){
-                chromeDesktopShared(dosen_token,false,peer);
-            }else{
-                chromeDesktopShared(dosen_token,true,peer);
-            }
-            cameraSwitch(peer,dosen_token);
+            setJoiningRoomHandler(socket,dosen_token);
         });
     }
     //DOSEN
@@ -212,20 +188,7 @@ $(document).ready(function(){
             socket.emit('joining room',mahasiswa_token);
         });
         socket.on("joining room response",function(mahasiswa_token){
-            chatHandler(socket,mahasiswa_token);
-            socket.on('message',socketMessageHandler);
-            socket.on('other message',socketOtherMessagehandler);
-            peer = new Peer(token,{host:host,port:port,path:'/peer'});
-            var conn = peer.connect(mahasiswa_token);
-            peer.on('connection',peerConnectionHandler);
-            peer.on('error',peerErrorHandler);
-            peer.on('call',peerCallHandler);
-            if(conn){
-                chromeDesktopShared(mahasiswa_token,false,peer);
-            }else{
-                chromeDesktopShared(mahasiswa_token,true,peer);
-            }
-            cameraSwitch(peer,mahasiswa_token);
+            setJoiningRoomHandler(socket,mahasiswa_token);
         });
     }
     socket.on("older message",olderMessageHandler);
@@ -259,16 +222,41 @@ function getCaret(el) {
     }
     return 0;
 }
-function appendChat (from,nama,pesan,waktu,durasi) {
+function appendChat (from,nama,pesan,waktu,durasi,type,status,key,progress,file) {
+    var textDisplay;
+    var theKey = "";
+    var theStatus = "";
     var position = "right";
-    if(from!="self") position = "left"; 
+    var theProgress = "";
+    if(from!="self") position = "left";
+
+    if(type!='text'){
+        if (file!=undefined && file!=null) {
+            textDisplay = '<a download href="http://'+host+':'+port+'/'+parameters['as']+'/download_file_chat/'+file+'"><img src="chat_icon/file.png"></a>';
+        }else{
+            textDisplay = '<img src="chat_icon/file.png">';
+        }
+        if(status!="complete"){
+            textDisplay+='<div class="progress">'+
+                '<div class="progress-bar progress-bar-info progress-bar-striped active" aria-valuenow="0" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%">'+
+                    '<span class="sr-only">0% Complete</span>'+
+                '</div>'+
+            '</div>';
+        }
+        theKey = key;
+        theStatus = status;
+        theProgress = progress;
+    }else{
+        textDisplay = pesan.replace(/\n/g, "<br />");
+    }
+
     $("#chat-display").append('' +
-        '<div class="message '+position+'">'+
+        '<div class="message '+position+'" data-key="'+theKey+'" data-status="'+theStatus+'">'+
             '<div class="triangle"></div>'+
             '<div class="message-inner">'+
                 '<div class="header-message">'+nama+'</div>'+
                 '<div class="message-text">'+
-                    pesan.replace(/\n/g, "<br />")+
+                    textDisplay+
                 '</div>'+
                 '<div class="message-time">'+
                     '<small>'+waktu+'</small>'+
@@ -277,4 +265,31 @@ function appendChat (from,nama,pesan,waktu,durasi) {
         '</div>'
     );
     $("#chat-display").animate({ scrollTop: $("#chat-display")[0].scrollHeight}, durasi!=undefined?durasi:50);
+}
+function initSocketListener (socket) {
+    socket.on('message',socketMessageHandler);
+    socket.on('other message',socketOtherMessagehandler);
+    socket.on('start upload file chat',socketStartUploadFileHandler);
+    socket.on('progress upload file chat',socketProgressUploadFileHandler);
+    socket.on('complete upload file chat',socketCompleteUploadFileHandler);
+}
+function initPeer(token,other_token) {
+    peer = new Peer(token,{host:host,port:port,path:'/peer'});
+    var conn = peer.connect(other_token);
+    peer.on('connection',peerConnectionHandler);
+    peer.on('error',peerErrorHandler);
+    peer.on('call',peerCallHandler);
+    if(conn){
+        chromeDesktopShared(other_token,false,peer);
+    }else{
+        chromeDesktopShared(other_token,true,peer);
+    }
+    setCameraSwitchListener(peer,other_token);
+}
+function setJoiningRoomHandler(socket, other_token){
+    uploader = new SocketIOFileUpload(socket);
+    chatHandler(socket,other_token);
+    initSocketListener(socket);
+    uploader.listenOnInput(document.getElementById("file-upload"));
+    initPeer(token,other_token);
 }

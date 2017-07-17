@@ -29,7 +29,6 @@ if(urlLocation[3]=='dosen' || urlLocation[3]=='dosen#'){
     //melakukan request token untuk mengambil tokenya sendiri sebagai mahasiswa dan mengambil token dosen 1 dan dosen 2 dan dilempar ke window.js
     socket.emit('request token', {as:"mahasiswa"});
     socket.on('token and list dosen',function(data){
-        console.log(data);
         $("#main-menu").append('' +
             '<li class="dropdown">'+
                 '<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-camera"></i><span>Bimbingan Online</span></a>'+
