@@ -6,9 +6,9 @@
 chrome.runtime.onMessageExternal.addListener(
     function(request, sender, sendResponse) {
         if(request.from=='dosen'){
-            chrome.windows.create({url:"window.html?as=dosen&token="+request.token,state:"maximized"},function(newWindow){});
+            chrome.windows.create({url:"window.html?as=dosen&token="+request.token,type:"popup",state:"maximized"},function(newWindow){});
         }else if(request.from=='mahasiswa'){
-            chrome.windows.create({url:"window.html?as=mahasiswa&to="+request.to+"&token="+request.token,state:"maximized"},function(newWindow){});
+            chrome.windows.create({url:"window.html?as=mahasiswa&to="+request.to+"&token="+request.token,type:"popup",state:"maximized"},function(newWindow){});
         }
     }
 );

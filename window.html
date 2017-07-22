@@ -1,6 +1,299 @@
 <html>
 <head>
-    <title>DESAIN 1</title>
+    <title>PENS RTC</title>
+    <link rel="stylesheet" type="text/css" href="fontawesome/css/font-awesome.min.css">
+    <style type="text/css">
+        body{
+            overflow: hidden;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: "Trebuchet MS", Helvetica, sans-serif;
+            outline:none !important;
+        }
+        video#other-video{
+            width: 100%;
+            height: 100%;
+            background-image: url("black.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            object-fit: contain;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition:0.2s;
+        }
+        video#my-video{
+            background-image: url("black.png");
+            background-position: center;
+            background-size: cover;
+            background-position: center;
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 10000;
+            transition:0.2s;
+            cursor: pointer;
+            border: 1px solid gray;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+         
+        /* Track */
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+        }
+         
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.8); 
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+        }
+        ::-webkit-scrollbar-thumb:window-inactive {
+            /*background: rgba(100,100,100,0.4); */
+        }
+        button.btn-side{
+            position: absolute;
+            right: 0;
+            background-color: rgba(40,40,40,1);
+            color: white;
+            border: 0px solid white;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            margin: 0;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button#btn-chat-trigger{
+            top: 0;
+        }
+        button#btn-camera-trigger{
+            top: 40px;
+        }
+        button#btn-sound-trigger{
+            top: 80px;
+        }
+        button#btn-stop-trigger{
+            top: 120px;
+        }
+        button.btn-side:hover{
+            background-color: rgba(30,30,30,1);
+        }
+        div#chat-section{
+            background-color: white;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            overflow: hidden;
+            transition:0.2s;
+            background-image: url('bg.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        div#header-chat-section{
+            width: 100%;
+            padding: 20px;
+            background-color: rgb(40,40,40);
+            color: white;
+            font-size: 20px;
+        }
+        div#footer-chat-section{
+            width: 100%;
+            padding: 7px;
+            background-color: rgb(40,40,40);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        #chat-input{
+            width: calc(100% - 14px);
+            resize: none;
+            border-radius: 5px;
+            padding: 5px;
+            font-family: "Trebuchet MS", Helvetica, sans-serif;
+        }
+        button.btn-file{
+            background-color: rgba(0,0,0,0);
+            color: white;
+            border: 0px solid white;
+            padding: 10px;
+            cursor: pointer;
+        }
+         div.message{
+            position: relative;
+            width: calc(100% - 90px);
+            opacity: 1;
+            margin-bottom: 10px;
+        }
+        div.message.right{
+            margin-left: 70px;
+        }
+        div.message-inner{
+            background-color: white;
+            border-radius: 3px;
+            padding: 12px;
+            z-index: 11000;
+            font-size: 13px;
+            position: relative;
+            box-shadow: 1px 2.5px 1px #adadad;
+        }
+        div.message.left div.message-inner{
+            margin-left: 20px;
+            box-shadow: 1px 1px 1px #adadad;
+        }
+        div.message.right div.message-inner{
+            margin-left: 20px;
+            box-shadow: -1px 1px 1px #adadad;
+            background-color: #dcf8c6;
+        }
+        textarea {
+            resize: none;
+        }
+        div.header-message{
+            width: 100%;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        div.message.left .header-message{
+            color: #337ab7;
+        }
+        div.message.right .header-message{
+            text-align: left;
+            color: #a94442;
+        }
+        div.triangle{
+            width: 30px;
+            height: 30px;
+            position: absolute;
+        }
+        div.message.left div.triangle{
+            background-image: url('download.png');
+            filter:brightness(200%);
+            top: 0;
+            left: 0;
+        }
+        div.message.right div.triangle{
+            background-position: right;
+            background-repeat: no-repeat; 
+            background-image: url('download2.png');
+            top: 0;
+            right: -20px
+        }
+        div.message.left .message-text{
+            text-align: left;
+        }
+        div.message.right .message-text{
+            text-align: left;
+        }
+        div.message-time{
+            color: cadetblue;
+            margin-top: 8px;
+            width: 100%;
+        }
+        div.message.left div.message-time{
+            text-align: right;
+        }
+        div.message.right div.message-time{
+            text-align: right;
+        }
+        div#body-chat-section{
+            width: 100%;
+            height: calc(100% - 235px);
+            overflow-y: scroll;
+            overflow-x: hidden;
+            z-index: 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        #modal-select-mahasiswa{
+            width: 500px;
+            padding: 10px;
+            position: absolute;
+            background-color: white;
+            border: 0px solid white;
+            z-index: 10000;
+            top: 40%;
+            left: calc(50% - 250px);
+        }
+        #list-mahasiswa{
+            width: 100%;
+            border: 0.5px solid gray;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #list-mahasiswa option{
+            padding: 10px;
+        }
+        #label-pilih-mahasiswa{
+            font-size: 17px;
+        }
+        div.shadow{
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            position: absolute;
+            z-index: 10000;
+        }
+        button#btn-connect{
+            width: 100%;
+            padding: 5px;
+            background-color: #223ce4;
+            color: white;
+            border: 1px solid #8794ea;
+            margin-top: 10px;
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+    <video id="other-video" poster="poster.svg">
+    </video>
+    <video id="my-video" poster="poster.svg">
+    </video>
+    <div class="shadow"></div>
+    <div id="modal-select-mahasiswa">
+        <label id="label-pilih-mahasiswa">Pilih Mahasiswa</label>
+        <select id="list-mahasiswa">
+        </select>
+        <button id="btn-connect">Connect</button>
+    </div>
+    <button class="btn-side" id="btn-chat-trigger" style="color:#02f500;" title="Chat"><i class="fa fa-comment"></i></button>
+    <button class="btn-side" id="btn-camera-trigger" title="Camera"><i class="fa fa-camera"></i></button>
+    <button class="btn-side" id="btn-sound-trigger" title="Sound"><i class="fa fa-microphone"></i></button>
+    <button class="btn-side" id="btn-stop-trigger" title="Stop"><i class="fa fa-stop"></i></button>
+    <div id="chat-section">
+        <div id="header-chat-section">
+            Chat
+        </div>
+        <div id="body-chat-section">
+
+        </div>
+        <div id="footer-chat-section">
+            <textarea placeholder="pesan anda" id="chat-input" rows="5"></textarea>
+            <button class="btn-file"><i class="fa fa-paperclip fa-2x"></i></button>
+            <button class="btn-file"><i class="fa fa-globe fa-2x"></i></button>
+            <button class="btn-file"><i class="fa fa-image fa-2x"></i></button>
+        </div>
+    </div>
+    <div id="file-upload"></div>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="socket.io.min.js"></script>
+    <script type="text/javascript" src="peer.min.js"></script>
+    <script type="text/javascript" src="moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="client.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+</body>
+</html>
+<!--
+<html>
+<head>
+    <title>PENS RTC</title>
     <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="fontawesome/css/font-awesome.min.css">
     <style type="text/css">
@@ -234,7 +527,9 @@
                         </video>
                     </div>
                     <div class="col-md-6 padding">  
-                        <div id="file-transfer-wrapper" style="margin-right:10px;border:1px solid gray;widht:100%;"></div>
+                        <div id="file-transfer-wrapper" style="margin-right:10px;border:1px solid gray;widht:100%;">
+                            <img src="stop.ico" style="width:100%:">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -267,3 +562,4 @@
     <script type="text/javascript" src="window.js"></script>
 </body>
 </html>
+-->
