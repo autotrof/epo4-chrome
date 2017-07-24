@@ -8,7 +8,7 @@
 $("#logout-button").remove();
 var urlLocation = window.location.href.split('/');
 var chromeId = chrome.runtime.id;
-var host = '222.124.212.175';
+var host = '115.85.70.168';
 var port = 8443;
 var socket = io.connect('http://'+host+':'+port);
 

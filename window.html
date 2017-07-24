@@ -249,6 +249,40 @@
             margin-top: 10px;
             height: 40px;
         }
+        img.file-icon{
+            height: 40px;
+        }
+        div.file-wrapper{
+            position: relative;
+            width: calc(100% - 20px);
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #cdd0d8;
+            box-shadow: 0px 0px 1px #2b2b2b;
+        }
+        .file-name{
+            top: 25px;
+            position: absolute;
+            color: #413f4c;
+        }
+        .download-button{
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            color: rgba(65, 63, 76, 0.7);
+            border: 3px solid rgba(65, 63, 76, 0.52);
+            padding: 5px;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+        .download-button:hover{
+            color: rgba(65, 63, 76, 1);
+            border: 3px solid rgba(65, 63, 76, 1);
+        }
+        .file-wrapper:hover .download-button{
+            color: rgba(65, 63, 76, 1);
+            border: 3px solid rgba(65, 63, 76, 1);
+        }
     </style>
 </head>
 <body>
@@ -290,276 +324,3 @@
     <script type="text/javascript" src="script.js"></script>
 </body>
 </html>
-<!--
-<html>
-<head>
-    <title>PENS RTC</title>
-    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="fontawesome/css/font-awesome.min.css">
-    <style type="text/css">
-        *{
-            padding: 0px;
-        }
-        .padding{
-            padding: 5px;
-        }
-        .head-chat{
-            border-left: 1px solid #484848;
-            border-right: 1px solid #484848;
-            background-color: #484848;
-            color: white;
-            padding: 15px;
-            margin-top: 5px;
-        }
-        .chat-box{
-            border: 1px solid #d4d4d4;
-            width: 100%;
-            height: 100%;
-            min-height: 500px;
-            overflow-y: hidden;
-            overflow-x: hidden;
-        }
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-         
-        /* Track */
-        ::-webkit-scrollbar-track {
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-        }
-         
-        /* Handle */
-        ::-webkit-scrollbar-thumb {
-            background: rgba(0,0,0,0.8); 
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
-        }
-        ::-webkit-scrollbar-thumb:window-inactive {
-            /*background: rgba(100,100,100,0.4); */
-        }
-        #button-switch-camera-1{
-            top:7px;
-            right:5px;
-        }
-        #button-switch-position-1{
-            top:6px;
-            right:5px;
-        }
-        #button-switch-camera-2{
-            top:6px;
-            right:15px;
-        }
-        #button-switch-position-2{
-            top:26px;
-            right:5px;
-        }
-        .btn-switch-1{
-            position:absolute;
-            padding:10px;
-            color:white;
-            background-color:rgba(0,0,0,0.5);
-            z-index:1000;
-            transition:0.2s;
-            cursor: pointer;
-        }
-        .btn-switch-1:hover{
-            background-color: rgba(0,0,0,0.8);
-        }
-        .btn-switch-2{
-            position:absolute;
-            padding:5px;
-            font-size: 8pt;
-            color:white;
-            background-color:rgba(0,0,0,0.5);
-            z-index:1000;
-            transition:0.2s;
-            cursor: pointer;
-        }
-        .btn-switch-2:hover{
-            background-color: rgba(0,0,0,0.8);
-        }
-        #chat-input-wrapper{
-            background: rgb(221, 221, 221);
-            padding: 10px;
-            position: absolute;
-            bottom: 5px;
-            left: 5px;
-            width: calc(100% - 10px);
-            z-index: 1000;
-        }
-        #chat-input{
-            background-color: white !important;
-        }
-        .hide{
-            display: none;
-        }
-        #first-step{
-            width: 100%;
-            height: 100%;
-            padding: 0px;
-        }
-        #list-mahasiswa{
-            
-        }
-        #wrapper-list-mahasiswa{
-            position: absolute;
-            left: calc(50% - 25px);
-            top:50%;
-        }
-        #chat-display{
-            height: calc(100% - 113px);
-            width: 100%;
-            overflow-x:auto;
-            overflow-y:scroll;
-            padding: 20px;
-            background-image: url('bg3.png');
-            background-color: rgba(205, 210, 130, 0.32);
-        }
-        div.message{
-            position: relative;
-            width: calc(100% - 90px);
-            opacity: 1;
-            margin-bottom: 10px;
-        }
-        div.message.right{
-            margin-left: 70px;
-        }
-        div.message-inner{
-            background-color: white;
-            border-radius: 3px;
-            padding: 12px;
-            z-index: 11000;
-            font-size: 13px;
-            position: relative;
-            box-shadow: 1px 2.5px 1px #adadad;
-        }
-        div.message.left div.message-inner{
-            margin-left: 20px;
-            box-shadow: 1px 1px 1px #adadad;
-        }
-        div.message.right div.message-inner{
-            margin-left: 20px;
-            box-shadow: -1px 1px 1px #adadad;
-            background-color: #dcf8c6;
-        }
-        textarea {
-            resize: none;
-        }
-        div.header-message{
-            width: 100%;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        div.message.left .header-message{
-            color: #337ab7;
-        }
-        div.message.right .header-message{
-            text-align: right;
-            color: #a94442;
-        }
-        div.triangle{
-            width: 30px;
-            height: 30px;
-            position: absolute;
-        }
-        div.message.left div.triangle{
-            background-image: url('download.png');
-            filter:brightness(200%);
-            top: 0;
-            left: 0;
-        }
-        div.message.right div.triangle{
-            background-position: right;
-            background-repeat: no-repeat; 
-            background-image: url('download2.png');
-            top: 0;
-            right: -20px
-        }
-        div.message.left .message-text{
-            text-align: left;
-        }
-        div.message.right .message-text{
-            text-align: left;
-        }
-        div.message-time{
-            color: cadetblue;
-            margin-top: 8px;
-            width: 100%;
-        }
-        div.message.left div.message-time{
-            text-align: right;
-        }
-        div.message.right div.message-time{
-            text-align: right;
-        }
-        video{
-            background-image: url("poster-loading.jpeg");
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-        }
-        .progress{
-            height: 10px;
-        }
-    </style>
-</head>
-<body style="padding:0px 40px;">
-    <div id="first-step" class="hide">
-        <div class="input-group-btn" id="wrapper-list-mahasiswa">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih Mahasiswa <span class="caret"></span></button>
-            <ul class="dropdown-menu" id="list-mahasiswa">
-            </ul>
-        </div>
-    </div>
-    <div id="second-step" class="hide">
-        <div class="row">
-            <div class="col-md-8 padding">
-                <div class="row">
-                    <div class="col-md-12 padding">
-                        <video style="margin-right:10px;width:calc(100% - 10px);height:490px;" id="video1" data-main="true" autoplay>
-                        </video>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 padding">
-                        <div id="button-switch-camera-2" class="btn-switch-2" data-status="sharedesktop">
-                            <i id="camera-switch-icon" class="fa fa-video-camera"></i>
-                        </div>
-                        <video style="margin-right:10px;width:calc(100% - 10px);" id="video2" autoplay muted data-main="false">
-                        </video>
-                    </div>
-                    <div class="col-md-6 padding">  
-                        <div id="file-transfer-wrapper" style="margin-right:10px;border:1px solid gray;widht:100%;">
-                            <img src="stop.ico" style="width:100%:">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 padding">
-                <div class="head-chat">
-                    Chat Box
-                </div>
-                <div class="chat-box">
-                    <div id="chat-display">
-
-                    </div>
-                    <div id="bg"></div>
-                    <div id="chat-input-wrapper">
-                        <textarea style="width:80%;display:inline;" disabled class="form-control" rows="4" id="chat-input" placeholder="Ketik pesan"></textarea>
-                        <div style="position: absolute;bottom: 20px;width: 20%;height: 50px;border: 0;font-size: 25px;right: 10px;text-align: center;cursor:pointer;">
-                            <i class="fa fa-paperclip"></i>
-                            <input type="file" id="file-upload" style="opacity:0;opacity: 0;width: 100%;height: 100%;position: absolute;border: 0;bottom: 10px;">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>  
-    </div>
-    <script type="text/javascript" src="socket.io.min.js"></script>
-    <script type="text/javascript" src="peer.min.js"></script>
-    <script type="text/javascript" src="jquery.min.js"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="moment-with-locales.min.js"></script>
-    <script type="text/javascript" src="client.js"></script>
-    <script type="text/javascript" src="window.js"></script>
-</body>
-</html>
--->

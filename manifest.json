@@ -19,7 +19,7 @@
 
 	"content_scripts": [
 		{
-			"matches": ["http://222.124.212.175:8443/mahasiswa/*","http://222.124.212.175:8443/dosen/*"],
+			"matches": ["http://115.85.70.168:8443/mahasiswa/*","http://115.85.70.168:8443/dosen/*"],
 			"js": ["jquery.min.js","socket.io.min.js","pensrtc.js"]
 		}
 	],
@@ -29,7 +29,7 @@
 	},
 
 	"externally_connectable": {
-		"matches": ["http://222.124.212.175:8443/mahasiswa/*","http://222.124.212.175:8443/dosen/*"]
+		"matches": ["http://115.85.70.168:8443/mahasiswa/*","http://115.85.70.168:8443/dosen/*"]
 	},
 
 	"permissions":[

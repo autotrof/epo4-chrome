@@ -5,15 +5,12 @@ var cameraState = "desktop";
 var soundState = "sound";
 var chatSectionWidth = "400px";
 var parameters = getUrlVars();
-const host = '222.124.212.175';
+const host = '115.85.70.168';
 const port = 8443;
-var stackstream;
+var stackstream,audioStream;
 var token = parameters['token'];
 var initializer = false;
 var uploader;
-var peerConnectionHandler = function(conn){
-    initializer = true;
-}
 var peerErrorHandler = function(err){
     switch (err.type){
         case 'browser-incompatible':
@@ -25,11 +22,16 @@ var peerErrorHandler = function(err){
     }
 }
 var peerCallHandler = function(call){
-	console.log("there is call");
     call.answer(stackstream);
     call.on('stream', function(stream) {
     	$("#other-video").prop("poster","");
         $("#other-video").prop("src", URL.createObjectURL(stream));
+    });
+}
+var peerAudioCallHandler = function(call){
+    call.answer(audioStream);
+    call.on('stream',function(stream){
+        initSound(stream);
     });
 }
 var socketMessageHandler = function(data){
@@ -76,6 +78,9 @@ var chatHandler = function(socket,other_token){
         }
     });
 }
+var socketStopBimbinganHandler = function(data){
+    window.close();
+}
 
 $(function(){
 	$("#chat-section").css('width',chatSectionWidth);
@@ -86,6 +91,7 @@ $(document).ready(function(){
     var dosen_token,mahasiswa_token;
     var source1,source2;
     var socket,peer;
+    $("#btn-sound-trigger").css("color","gray");
     $("#btn-chat-trigger").click(function(){
 		if (chatState=="hidden") {
 			$(this).css('color','white');
@@ -115,36 +121,11 @@ $(document).ready(function(){
 			myVideoState = "minimize";
 		}
 	});
-	$("#btn-camera-trigger").click(function(){
-		if(cameraState=="desktop"){
-			$(this).css('color','blue');
-			$("#btn-camera-trigger i").removeClass("fa-camera");
-			$("#btn-camera-trigger i").addClass("fa-desktop");
-			cameraState="camera";
-		}else{
-			$(this).css('color','white');
-			$("#btn-camera-trigger i").removeClass("fa-desktop");
-			$("#btn-camera-trigger i").addClass("fa-camera");
-			cameraState="desktop";
-		}
-	});
-	$("#btn-sound-trigger").click(function(){
-		if(soundState=="sound"){
-			$(this).css('color','red');
-			$("#btn-sound-trigger i").removeClass("fa-microphone");
-			$("#btn-sound-trigger i").addClass("fa-microphone-slash");
-			soundState="mute";
-		}else{
-			$(this).css('color','white');
-			$("#btn-sound-trigger i").removeClass("fa-microphone-slash");
-			$("#btn-sound-trigger i").addClass("fa-microphone");
-			soundState="sound";
-		}
-	});
 	$("#btn-stop-trigger").click(function(){
 		var _c = confirm("Anda yakin akan mengakhiri sesi ini ?");
 		if(_c===true){
-			$(this).css('color','red');  
+			$(this).css('color','red');
+            socket.emit("stop bimbingan",token);
 		}
 	});
     //MAHASISWA
@@ -157,6 +138,7 @@ $(document).ready(function(){
         socket.on("joining room response",function(res){
             setJoiningRoomHandler(socket,dosen_token);
         });
+        socket.on("stop bimbingan",socketStopBimbinganHandler);
     }
     //DOSEN
     else if(parameters['as']=='dosen'){
@@ -166,6 +148,7 @@ $(document).ready(function(){
                 $("#list-mahasiswa").append("<option value='"+obj.token+"'>"+obj.nama+"</option>");
             });
         });
+        socket.on("stop bimbingan",socketStopBimbinganHandler);
         $("#btn-connect").on('click',function(){
         	mahasiswa_token = $("#list-mahasiswa").val();
         	$(".shadow").remove();
@@ -239,7 +222,11 @@ function appendChat (from,nama,pesan,waktu,durasi,type,status,key,progress,file)
             }else if(extension=='exe'||extension=='run'){
                 image = 'execute.png';
             }
-            textDisplay = '<a download href="http://'+host+':'+port+'/'+parameters['as']+'/download_file_chat/'+file+'"><img src="chat_icon/'+image+'"></a>';
+            var file_text;
+            if(file.length>15){
+                file_text = file.substring(0, 16)+"...";
+            }
+            textDisplay = '<div class="file-wrapper"><a  download href="http://'+host+':'+port+'/'+parameters['as']+'/download_file_chat/'+file+'"><img class="file-icon" src="chat_icon/'+image+'"> <strong class="file-name">'+file_text+'</strong><a href="http://'+host+':'+port+'/'+parameters['as']+'/download_file_chat/'+file+'" download class="download-button"><i class="fa fa-download"></i></a></a></div>'
         }else{
             textDisplay = '<img src="chat_icon/file.png">';
         }
@@ -283,7 +270,12 @@ function initSocketListener (socket) {
 function initPeer(token,other_token) {
     peer = new Peer(token,{host:host,port:port,path:'/peer'});
     var conn = peer.connect(other_token);
-    peer.on('connection',peerConnectionHandler);
+    peer.on('connection',function(conn){
+        if(conn.metadata=='audio'){
+            peer.on('call',peerAudioCallHandler);
+        }
+        initializer = true;
+    });
     peer.on('error',peerErrorHandler);
     peer.on('call',peerCallHandler);
     if(conn){
@@ -318,8 +310,6 @@ var chromeDesktopShared = function(other_token, init, peer){
                 if(init==false){
                     stackstream = stream;
                     var call = peer.call(other_token,stream);
-                    console.log("Stream");
-                    console.log(call);
                     call.on('stream',function(s){
                     	$("#other-video").prop("poster","");
                         $("#other-video").prop("src", URL.createObjectURL(s));
@@ -331,11 +321,27 @@ var chromeDesktopShared = function(other_token, init, peer){
             });
         }
     );
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+    if (navigator.getUserMedia) {       
+        navigator.getUserMedia({audio:true, video: false}, function(stream){
+            audioStream = stream;
+            var conn = peer.connect(other_token,{metadata:"audio"});
+            var call = peer.call(other_token,stream);
+            call.on('stream',function(stream2){
+                initSound(stream2);
+            });
+        }, function(e){
+            console.log(e);
+        });
+    }
 }
 var setCameraSwitchListener = function(peer,other_token){
     var theStream = null;
-    $("#button-switch-camera-2").click(function(){
-        if($(this).data('status')=='sharedesktop'){
+    $("#btn-camera-trigger").click(function(){
+        if(cameraState=="desktop"){
+            $(this).css('color','blue');
+            $("#btn-camera-trigger i").removeClass("fa-camera");
+            $("#btn-camera-trigger i").addClass("fa-desktop");
             if(theStream!=null && theStream!=undefined) theStream.getTracks().forEach(track => track.stop());
             navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
             if (navigator.getUserMedia) {       
@@ -351,10 +357,11 @@ var setCameraSwitchListener = function(peer,other_token){
                     console.log(e);
                 });
             }
-            $(this).data('status','videocall');
-            $("#camera-switch-icon").removeClass("fa-desktop");
-            $("#camera-switch-icon").addClass("fa-video-camera");
+            cameraState="camera";
         }else{
+            $(this).css('color','white');
+            $("#btn-camera-trigger i").removeClass("fa-desktop");
+            $("#btn-camera-trigger i").addClass("fa-camera");
             if(theStream!=null && theStream!=undefined) theStream.stop();
             chrome.desktopCapture.chooseDesktopMedia(
                 ["screen","window"],
@@ -380,9 +387,34 @@ var setCameraSwitchListener = function(peer,other_token){
                     });
                 }
             );
-            $(this).data('status','sharedesktop');
-            $("#camera-switch-icon").removeClass("fa-video-camera");
-            $("#camera-switch-icon").addClass("fa-desktop");
+            cameraState="desktop";
         }
     });
+}
+function initSound (stream) {
+    $("#btn-sound-trigger").css("color","white");
+    var audioSize = $("audio").length;
+    if(audioSize<1){
+        var audio = $('<audio autoplay id="audio"/>').appendTo('body');
+        audio[0].src = (URL || webkitURL || mozURL).createObjectURL(stream);
+        $("#btn-sound-trigger").click(function(){
+            var audioTag = document.getElementById("audio");
+            if(typeof audioTag !== 'undefined' && audioTag !== null) {
+                $("#btn-sound-trigger").css("color","white");
+                if(soundState=="sound"){
+                    $(this).css('color','red');
+                    $("#btn-sound-trigger i").removeClass("fa-microphone");
+                    $("#btn-sound-trigger i").addClass("fa-microphone-slash");
+                    audioTag.muted = true;
+                    soundState="mute";
+                }else{
+                    $(this).css('color','white');
+                    $("#btn-sound-trigger i").removeClass("fa-microphone-slash");
+                    $("#btn-sound-trigger i").addClass("fa-microphone");
+                    audioTag.muted = false;
+                    soundState="sound";
+                }   
+            }
+        });
+    }
 }
