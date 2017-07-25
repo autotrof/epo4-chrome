@@ -41,18 +41,18 @@ var socketOtherMessagehandler = function(data){
     appendChat("other",data.from,data.text,data.time,500,data.type,data.status,data.key,data.progress);
 }
 var socketStartUploadFileHandler = function(data){
-    appendChat(data.from_info,data.from,data.text,data.time,500,data.type,data.status,data.key,data.progress);
+    appendChat(data.from_info,data.from,null,moment(data.time).calendar(),null,"file","start",data.key,null,"Loading123456789012345.xyz");
 }
 var socketProgressUploadFileHandler = function(data){
-    $("div.message[data-key='"+data.key+"']").data('status',data.status);
-    $("div.message[data-key='"+data.key+"'] .progress .progress-bar").attr('style','width : '+data.progress+'%');
-    $("div.message[data-key='"+data.key+"'] .progress .progress-bar").attr('aria-valuenow',data.progress);
-    $("div.message[data-key='"+data.key+"'] .progress .progress-bar span").text(data.progress+'% Complete');
+    // $("div.message[data-key='"+data.key+"']").data('status',data.status);
+    // $("div.message[data-key='"+data.key+"'] .progress .progress-bar").attr('style','width : '+data.progress+'%');
+    // $("div.message[data-key='"+data.key+"'] .progress .progress-bar").attr('aria-valuenow',data.progress);
+    // $("div.message[data-key='"+data.key+"'] .progress .progress-bar span").text(data.progress+'% Complete');
 }
 var socketCompleteUploadFileHandler = function(data){
-    $("div.message[data-key='"+data.key+"']").data('status',data.status);
-    $("div.message[data-key='"+data.key+"']").find('div.progress').remove();
-    $("div.message[data-key='"+data.key+"']").find('img').wrap('<a download href="http://'+host+':'+port+'/'+parameters['as']+'/download_file_chat/'+data.file+'"></a>');
+    $(".message[data-key='"+data.key+"'] .file-wrapper a").attr('href','http://'+host+':'+port+'/'+parameters['as']+'/download_file_chat/'+data.file);
+    $(".message[data-key='"+data.key+"'] .file-wrapper a.a1 strong").text(data.file.substring(0, 16)+"...");
+    $(".message[data-key='"+data.key+"'] .file-wrapper a.a1 img").attr('src','chat_icon/'+getIcon(data.file));
 }
 var olderMessageHandler = function (data) {
     $.each(data,function(key,object){
@@ -125,7 +125,7 @@ $(document).ready(function(){
 		var _c = confirm("Anda yakin akan mengakhiri sesi ini ?");
 		if(_c===true){
 			$(this).css('color','red');
-            socket.emit("stop bimbingan",token);
+            window.close();
 		}
 	});
     //MAHASISWA
@@ -199,44 +199,22 @@ function appendChat (from,nama,pesan,waktu,durasi,type,status,key,progress,file)
 
     if(type!='text'){
         if (file!=undefined && file!=null) {
-            var extension = file.split('.').pop();
-            var image = 'file.png';
-            if(extension=='zip'||extension=='rar'||extension=='iso'||extension=='7zip'||extension=='gz'||extension=='tar'){
-                image = 'archive.svg';
-            }else if(extension=='mp3'||extension=='ogg'){
-                image='audio.png';
-            }else if(extension=='csv'){
-                image = 'csv.png';
-            }else if (extension=='xlsx'||extension=='xls'||extension=='et') {
-                image = 'excel.png';
-            }else if(extension=='png'||extension=='jpeg'||extension=='jpg'||extension=='gif'||extension=='bmp'||extension=='svg'){
-                image = 'image.svg';
-            }else if(extension=='pptx'||extension=='ppt'||extension=='dps'){
-                image = 'ppt.png';
-            }else if(extension=='mp4'||extension=='mov'||extension=='avi'||extension=='3gp'||extension=='f4v'||extension=='wmv'||extension=='mkv'||extension=='webm'||extension=='asf'){
-                image = 'video.png';
-            }else if(extension=='doc'||extension=='docx'||extension=='wps'){
-                image = 'word.png';
-            }else if(extension=='pdf'){
-                image = 'pdf.png';
-            }else if(extension=='exe'||extension=='run'){
-                image = 'execute.png';
-            }
+            var image = getIcon(file);
             var file_text;
             if(file.length>15){
                 file_text = file.substring(0, 16)+"...";
             }
-            textDisplay = '<div class="file-wrapper"><a  download href="http://'+host+':'+port+'/'+parameters['as']+'/download_file_chat/'+file+'"><img class="file-icon" src="chat_icon/'+image+'"> <strong class="file-name">'+file_text+'</strong><a href="http://'+host+':'+port+'/'+parameters['as']+'/download_file_chat/'+file+'" download class="download-button"><i class="fa fa-download"></i></a></a></div>'
+            textDisplay = '<div class="file-wrapper"><a class="a1" download href="http://'+host+':'+port+'/'+parameters['as']+'/download_file_chat/'+file+'"><img class="file-icon" src="chat_icon/'+image+'"> <strong class="file-name">'+file_text+'</strong><a href="http://'+host+':'+port+'/'+parameters['as']+'/download_file_chat/'+file+'" download class="download-button a2"><i class="fa fa-download"></i></a></a></div>'
         }else{
             textDisplay = '<img src="chat_icon/file.png">';
         }
-        if(status!="complete"){
-            textDisplay+='<div class="progress">'+
-                '<div class="progress-bar progress-bar-info progress-bar-striped active" aria-valuenow="0" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%">'+
-                    '<span class="sr-only">0% Complete</span>'+
-                '</div>'+
-            '</div>';
-        }
+        // if(status!="complete"){
+        //     textDisplay+='<div class="progress">'+
+        //         '<div class="progress-bar progress-bar-info progress-bar-striped active" aria-valuenow="0" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%">'+
+        //             '<span class="sr-only">0% Complete</span>'+
+        //         '</div>'+
+        //     '</div>';
+        // }
         theKey = key;
         theStatus = status;
         theProgress = progress;
@@ -417,4 +395,30 @@ function initSound (stream) {
             }
         });
     }
+}
+function getIcon (file) {
+    var extension = file.split('.').pop();
+    var image = 'file.png';
+    if(extension=='zip'||extension=='rar'||extension=='iso'||extension=='7zip'||extension=='gz'||extension=='tar'){
+        image = 'archive.svg';
+    }else if(extension=='mp3'||extension=='ogg'){
+        image='audio.png';
+    }else if(extension=='csv'){
+        image = 'csv.png';
+    }else if (extension=='xlsx'||extension=='xls'||extension=='et') {
+        image = 'excel.png';
+    }else if(extension=='png'||extension=='jpeg'||extension=='jpg'||extension=='gif'||extension=='bmp'||extension=='svg'){
+        image = 'image.svg';
+    }else if(extension=='pptx'||extension=='ppt'||extension=='dps'){
+        image = 'ppt.png';
+    }else if(extension=='mp4'||extension=='mov'||extension=='avi'||extension=='3gp'||extension=='f4v'||extension=='wmv'||extension=='mkv'||extension=='webm'||extension=='asf'){
+        image = 'video.png';
+    }else if(extension=='doc'||extension=='docx'||extension=='wps'){
+        image = 'word.png';
+    }else if(extension=='pdf'){
+        image = 'pdf.png';
+    }else if(extension=='exe'||extension=='run'){
+        image = 'execute.png';
+    }
+    return image;
 }

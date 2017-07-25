@@ -309,13 +309,14 @@
 
         </div>
         <div id="footer-chat-section">
+
             <textarea placeholder="pesan anda" id="chat-input" rows="5"></textarea>
-            <button class="btn-file"><i class="fa fa-paperclip fa-2x"></i></button>
-            <button class="btn-file"><i class="fa fa-globe fa-2x"></i></button>
-            <button class="btn-file"><i class="fa fa-image fa-2x"></i></button>
+            <input id="file-upload" type="file" />
+            <!-- <button class="btn-file" onclick="$('#file-upload').click();"><i class="fa fa-paperclip fa-2x"></i></button> -->
+            <!-- <button class="btn-file"><i class="fa fa-globe fa-2x"></i></button>
+            <button class="btn-file"><i class="fa fa-image fa-2x"></i></button> -->
         </div>
     </div>
-    <div id="file-upload"></div>
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="socket.io.min.js"></script>
     <script type="text/javascript" src="peer.min.js"></script>
