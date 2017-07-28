@@ -308,6 +308,9 @@ var chromeDesktopShared = function(other_token, init, peer){
             if(init==false){
                 audioStream = stream;
                 var call = peer.call(other_token,stream,{metadata:"audio"});
+                call.on('stream',function(s){
+                    initSound(s);
+                });
             }
         }, function(e){
             console.log(e);
