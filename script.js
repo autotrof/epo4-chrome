@@ -17,22 +17,24 @@ var peerErrorHandler = function(err){
             alert("Browser yang anda gunakan tidak mendukung untuk melakukan videocall ataupun sharedesktop");
         break;
         case 'peer-unavailable':
-            // initializer = true;
+            console.log("peer-unavailable");
         break;
     }
 }
 var peerCallHandler = function(call){
-    call.answer(stackstream);
-    call.on('stream', function(stream) {
-    	$("#other-video").prop("poster","");
-        $("#other-video").prop("src", URL.createObjectURL(stream));
-    });
-}
-var peerAudioCallHandler = function(call){
-    call.answer(audioStream);
-    call.on('stream',function(stream){
-        initSound(stream);
-    });
+    console.log(call.metadata);
+    if (call.metadata=="audio") {
+        call.answer(audioStream);
+        call.on('stream',function(stream){
+            initSound(stream);
+        });
+    }else{
+        call.answer(stackstream);
+        call.on('stream', function(stream) {
+            $("#other-video").prop("poster","");
+            $("#other-video").prop("src", URL.createObjectURL(stream));
+        });
+    }
 }
 var socketMessageHandler = function(data){
     appendChat("self","Anda",data.text,data.time,500,data.type,data.status,data.key,data.progress);
@@ -249,23 +251,19 @@ function initPeer(token,other_token) {
     peer = new Peer(token,{host:host,port:port,path:'/peer'});
     var conn = peer.connect(other_token);
     peer.on('connection',function(c){
-        console.log("ON CONNECTION");
-        console.log(c);
-    //     if(conn.metadata=='audio'){
-    //         peer.on('call',peerAudioCallHandler);
-    //     }else{
-    //         console.log("There is connection");
-    //         initializer = true;
-    //         peer.on('error',peerErrorHandler);
-    //         peer.on('call',peerCallHandler);
-    //         if(initializer){
-    //             chromeDesktopShared(other_token,false,peer);
-    //         }else{
-    //             chromeDesktopShared(other_token,true,peer);
-    //         }
-    //         setCameraSwitchListener(peer,other_token);
-    //     }
+        if(c.peer==other_token){
+            console.log(c.peer);
+            c.on('open',function(){
+                peer.on('call',peerCallHandler);
+                peer.on('error',peerErrorHandler);
+                initializer = true;
+            });
+        }else{
+            return false;
+        }
     });
+    chromeDesktopShared(other_token,false,peer);
+    setCameraSwitchListener(peer,other_token);
 }
 function setJoiningRoomHandler(socket, other_token){
     uploader = new SocketIOFileUpload(socket);
@@ -275,6 +273,7 @@ function setJoiningRoomHandler(socket, other_token){
     initPeer(token,other_token);
 }
 var chromeDesktopShared = function(other_token, init, peer){
+    console.log("DESKTOP SHARED");
     chrome.desktopCapture.chooseDesktopMedia(
         ["screen","window"],
         function(screedID){
@@ -306,38 +305,31 @@ var chromeDesktopShared = function(other_token, init, peer){
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
     if (navigator.getUserMedia) {       
         navigator.getUserMedia({audio:true, video: false}, function(stream){
-            console.log(init);
-            // audioStream = stream;
-            // if(init==false){
-            //     var conn = peer.connect(other_token,{metadata:"audio"});
-            //     var call = peer.call(other_token,stream);
-            //     call.on('stream',function(stream2){
-            //         initSound(stream2);
-            //     });
-            // }
+            if(init==false){
+                audioStream = stream;
+                var call = peer.call(other_token,stream,{metadata:"audio"});
+            }
         }, function(e){
             console.log(e);
         });
     }
 }
 var setCameraSwitchListener = function(peer,other_token){
-    var theStream = null;
+    // var theStream = null;
     $("#btn-camera-trigger").click(function(){
         if(cameraState=="desktop"){
             $(this).css('color','blue');
             $("#btn-camera-trigger i").removeClass("fa-camera");
             $("#btn-camera-trigger i").addClass("fa-desktop");
-            if(theStream!=null && theStream!=undefined) theStream.getTracks().forEach(track => track.stop());
+            if(stackstream!=null && stackstream!=undefined) stackstream.getTracks().forEach(track => track.stop());
             navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
             if (navigator.getUserMedia) {       
                 navigator.getUserMedia({audio:false, video: true}, function(stream){
                     $("#my-video").prop("src", URL.createObjectURL(stream));
                     $("#my-video")[0].load();
                     var call = peer.call(other_token,stream);
-                    call.on('stream',function(s){
-                        $("#other-video").prop("src", URL.createObjectURL(s));
-                    });
-                    theStream = stream.getTracks()[0];
+                    peer.on('call',peerCallHandler);
+                    stackstream = stream.getTracks()[0];
                 }, function(e){
                     console.log(e);
                 });
@@ -347,7 +339,7 @@ var setCameraSwitchListener = function(peer,other_token){
             $(this).css('color','white');
             $("#btn-camera-trigger i").removeClass("fa-desktop");
             $("#btn-camera-trigger i").addClass("fa-camera");
-            if(theStream!=null && theStream!=undefined) theStream.stop();
+            if(stackstream!=null && stackstream!=undefined) stackstream.stop();
             chrome.desktopCapture.chooseDesktopMedia(
                 ["screen","window"],
                 function(screedID){
@@ -362,10 +354,8 @@ var setCameraSwitchListener = function(peer,other_token){
                     },function(stream){
                         $("#my-video").prop("src", URL.createObjectURL(stream));
                         var call = peer.call(other_token,stream);
-                        call.on('stream',function(s){
-                            $("#other-video").prop("src", URL.createObjectURL(s));
-                        });
-                        theStream = stream;
+                        peer.on('call',peerCallHandler);
+                        stackstream = stream;
                     },function(e){
                         console.log(e);
                         console.log("Some kind of error");
