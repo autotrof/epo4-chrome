@@ -248,22 +248,23 @@ function initSocketListener (socket) {
 function initPeer(token,other_token) {
     peer = new Peer(token,{host:host,port:port,path:'/peer'});
     var conn = peer.connect(other_token);
-    peer.on('connection',function(conn){
-        if(conn.metadata=='audio'){
-            peer.on('call',peerAudioCallHandler);
-        }else{
-            console.log("There is connection");
-            initializer = true;
-            peer.on('error',peerErrorHandler);
-            peer.on('call',peerCallHandler);
-            if(initializer){
-                chromeDesktopShared(other_token,false,peer);
-            }else{
-                chromeDesktopShared(other_token,true,peer);
-            }
-            setCameraSwitchListener(peer,other_token);
-        }
-    });
+    // peer.on('connection',function(conn){
+    //     if(conn.metadata=='audio'){
+    //         peer.on('call',peerAudioCallHandler);
+    //     }else{
+    //         console.log("There is connection");
+    //         initializer = true;
+    //         peer.on('error',peerErrorHandler);
+    //         peer.on('call',peerCallHandler);
+    //         if(initializer){
+    //             chromeDesktopShared(other_token,false,peer);
+    //         }else{
+    //             chromeDesktopShared(other_token,true,peer);
+    //         }
+    //         setCameraSwitchListener(peer,other_token);
+    //     }
+    // });
+    console.log(conn);
 }
 function setJoiningRoomHandler(socket, other_token){
     uploader = new SocketIOFileUpload(socket);
