@@ -251,7 +251,7 @@ function initPeer(token,other_token) {
     peer.on('connection',function(conn){
         if(conn.metadata=='audio'){
             peer.on('call',peerAudioCallHandler);
-        }lese{
+        }else{
             console.log("There is connection");
             initializer = true;
         }
