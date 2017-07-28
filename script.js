@@ -17,7 +17,7 @@ var peerErrorHandler = function(err){
             alert("Browser yang anda gunakan tidak mendukung untuk melakukan videocall ataupun sharedesktop");
         break;
         case 'peer-unavailable':
-            initializer = true;
+            // initializer = true;
         break;
     }
 }
