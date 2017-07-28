@@ -254,16 +254,16 @@ function initPeer(token,other_token) {
         }else{
             console.log("There is connection");
             initializer = true;
+            peer.on('error',peerErrorHandler);
+            peer.on('call',peerCallHandler);
+            if(initializer){
+                chromeDesktopShared(other_token,false,peer);
+            }else{
+                chromeDesktopShared(other_token,true,peer);
+            }
+            setCameraSwitchListener(peer,other_token);
         }
     });
-    peer.on('error',peerErrorHandler);
-    peer.on('call',peerCallHandler);
-    if(initializer){
-        chromeDesktopShared(other_token,false,peer);
-    }else{
-        chromeDesktopShared(other_token,true,peer);
-    }
-    setCameraSwitchListener(peer,other_token);
 }
 function setJoiningRoomHandler(socket, other_token){
     uploader = new SocketIOFileUpload(socket);
