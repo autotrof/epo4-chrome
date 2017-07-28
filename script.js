@@ -23,18 +23,18 @@ var peerErrorHandler = function(err){
 }
 var peerCallHandler = function(call){
     console.log(call.metadata);
-    if (call.metadata=="audio") {
-        call.answer(audioStream);
-        call.on('stream',function(stream){
-            initSound(stream);
-        });
-    }else{
+    // if (call.metadata=="audio") {
+    //     call.answer(audioStream);
+    //     call.on('stream',function(stream){
+    //         initSound(stream);
+    //     });
+    // }else{
         call.answer(stackstream);
         call.on('stream', function(stream) {
             $("#other-video").prop("poster","");
             $("#other-video").prop("src", URL.createObjectURL(stream));
         });
-    }
+    // }
 }
 var socketMessageHandler = function(data){
     appendChat("self","Anda",data.text,data.time,500,data.type,data.status,data.key,data.progress);
@@ -302,20 +302,20 @@ var chromeDesktopShared = function(other_token, init, peer){
             });
         }
     );
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
-    if (navigator.getUserMedia) {       
-        navigator.getUserMedia({audio:true, video: false}, function(stream){
-            if(init==false){
-                audioStream = stream;
-                var call = peer.call(other_token,stream,{metadata:"audio"});
-                call.on('stream',function(s){
-                    initSound(s);
-                });
-            }
-        }, function(e){
-            console.log(e);
-        });
-    }
+    // navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+    // if (navigator.getUserMedia) {       
+    //     navigator.getUserMedia({audio:true, video: false}, function(stream){
+    //         if(init==false){
+    //             audioStream = stream;
+    //             var call = peer.call(other_token,stream,{metadata:"audio"});
+    //             call.on('stream',function(s){
+    //                 initSound(s);
+    //             });
+    //         }
+    //     }, function(e){
+    //         console.log(e);
+    //     });
+    // }
 }
 var setCameraSwitchListener = function(peer,other_token){
     // var theStream = null;
