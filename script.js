@@ -303,11 +303,13 @@ var chromeDesktopShared = function(other_token, init, peer){
     if (navigator.getUserMedia) {       
         navigator.getUserMedia({audio:true, video: false}, function(stream){
             audioStream = stream;
-            var conn = peer.connect(other_token,{metadata:"audio"});
-            var call = peer.call(other_token,stream);
-            call.on('stream',function(stream2){
-                initSound(stream2);
-            });
+            if(init==false){
+                var conn = peer.connect(other_token,{metadata:"audio"});
+                var call = peer.call(other_token,stream);
+                call.on('stream',function(stream2){
+                    initSound(stream2);
+                });
+            }
         }, function(e){
             console.log(e);
         });
