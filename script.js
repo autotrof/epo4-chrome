@@ -248,7 +248,9 @@ function initSocketListener (socket) {
 function initPeer(token,other_token) {
     peer = new Peer(token,{host:host,port:port,path:'/peer'});
     var conn = peer.connect(other_token);
-    // peer.on('connection',function(conn){
+    peer.on('connection',function(c){
+        console.log("ON CONNECTION");
+        console.log(c);
     //     if(conn.metadata=='audio'){
     //         peer.on('call',peerAudioCallHandler);
     //     }else{
@@ -263,10 +265,7 @@ function initPeer(token,other_token) {
     //         }
     //         setCameraSwitchListener(peer,other_token);
     //     }
-    // });
-    console.log(conn);
-    console.log(conn['open']);
-    console.log(conn['c']);
+    });
 }
 function setJoiningRoomHandler(socket, other_token){
     uploader = new SocketIOFileUpload(socket);
