@@ -265,7 +265,8 @@ function initPeer(token,other_token) {
     //     }
     // });
     console.log(conn);
-    console.log(conn[open]);
+    console.log(conn['open']);
+    console.log(conn['c']);
 }
 function setJoiningRoomHandler(socket, other_token){
     uploader = new SocketIOFileUpload(socket);
