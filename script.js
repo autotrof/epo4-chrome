@@ -256,6 +256,7 @@ function initPeer(token,other_token) {
     peer.on('connection',function(c){
         if(c.peer==other_token){
             console.log(c.peer);
+            chromeDesktopShared(other_token,true,peer);
             c.on('open',function(){
                 peer.on('call',function(call){
                     call.answer(audioStream);
