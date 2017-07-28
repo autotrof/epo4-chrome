@@ -371,30 +371,26 @@ var setCameraSwitchListener = function(peer,other_token){
 }
 function initSound (stream) {
     $("#btn-sound-trigger").css("color","white");
-    var audioSize = $("audio").length;
-    if(audioSize<1){
-        var audio = $('<audio autoplay id="audio"/>').appendTo('body');
-        audio[0].src = (URL || webkitURL || mozURL).createObjectURL(stream);
-        $("#btn-sound-trigger").click(function(){
-            var audioTag = document.getElementById("audio");
-            if(typeof audioTag !== 'undefined' && audioTag !== null) {
-                $("#btn-sound-trigger").css("color","white");
-                if(soundState=="sound"){
-                    $(this).css('color','red');
-                    $("#btn-sound-trigger i").removeClass("fa-microphone");
-                    $("#btn-sound-trigger i").addClass("fa-microphone-slash");
-                    audioTag.muted = true;
-                    soundState="mute";
-                }else{
-                    $(this).css('color','white');
-                    $("#btn-sound-trigger i").removeClass("fa-microphone-slash");
-                    $("#btn-sound-trigger i").addClass("fa-microphone");
-                    audioTag.muted = false;
-                    soundState="sound";
-                }   
-            }
-        });
-    }
+    var audioTag = document.getElementById('audio');
+    var audioSource = document.getElementById('audioSource');
+    audioSource.src = (URL || webkitURL || mozURL).createObjectURL(stream);
+    $("#btn-sound-trigger").click(function(){
+        if(soundState=="sound"){
+            $(this).css('color','red');
+            $("#btn-sound-trigger i").removeClass("fa-microphone");
+            $("#btn-sound-trigger i").addClass("fa-microphone-slash");
+            audioTag.muted = true;
+            soundState="mute";
+        }else{
+            $(this).css('color','white');
+            $("#btn-sound-trigger i").removeClass("fa-microphone-slash");
+            $("#btn-sound-trigger i").addClass("fa-microphone");
+            audioTag.muted = false;
+            soundState="sound";
+        }
+    });
+    audioTag.load();
+    audioTag.play();
 }
 function getIcon (file) {
     var extension = file.split('.').pop();
