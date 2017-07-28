@@ -264,7 +264,7 @@ function initPeer(token,other_token) {
     //         setCameraSwitchListener(peer,other_token);
     //     }
     // });
-    console.log(conn.c);
+    console.log(conn);
     console.log(conn.open);
 }
 function setJoiningRoomHandler(socket, other_token){
