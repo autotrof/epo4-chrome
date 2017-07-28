@@ -25,11 +25,11 @@ var peerErrorHandler = function(err){
 var peerCallHandler = function(call){
     console.log(call.metadata);
     if (call.metadata=="audio") {
-        call.answer(audioStream);
-        console.log('answer call audio');   
-        call.on('stream',function(stream){
-            initSound(stream);
-        });
+        // call.answer(audioStream);
+        // console.log('answer call audio');   
+        // call.on('stream',function(stream){
+        //     initSound(stream);
+        // });
     }else{
         console.log('answer call video');
     //     call.answer(stackstream);
@@ -257,8 +257,13 @@ function initPeer(token,other_token) {
         if(c.peer==other_token){
             console.log(c.peer);
             c.on('open',function(){
-                peer.on('call',peerCallHandler);
-                peer.on('error',peerErrorHandler);
+                peer.on('call',function(call){
+                    call.answer(audioStream);
+                    call.on('stream',function(s){
+                        initSound(s);
+                    });
+                });
+                // peer.on('error',peerErrorHandler);
                 initializer = true;
             });
         }else{
@@ -266,7 +271,7 @@ function initPeer(token,other_token) {
         }
     });
     chromeDesktopShared(other_token,false,peer);
-    setCameraSwitchListener(peer,other_token);
+    // setCameraSwitchListener(peer,other_token);
 }
 function setJoiningRoomHandler(socket, other_token){
     uploader = new SocketIOFileUpload(socket);
@@ -308,10 +313,10 @@ var chromeDesktopShared = function(other_token, init, peer){
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
     if (navigator.getUserMedia) {       
         navigator.getUserMedia({audio:true, video: false}, function(stream){
+            audioStream = stream;
             if(init==false){
-                audioStream = stream;
                 var call = peer.call(other_token,stream,{metadata:"audio"});
-                peer.on('call',peerCallHandler);
+                // peer.on('call',peerCallHandler);
                 call.on('stream',function(stream2){
                     initSound(stream2);
                 });
