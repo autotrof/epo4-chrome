@@ -256,7 +256,7 @@ function initPeer(token,other_token) {
     });
     peer.on('error',peerErrorHandler);
     peer.on('call',peerCallHandler);
-    if(conn){
+    if(initializer){
         chromeDesktopShared(other_token,false,peer);
     }else{
         chromeDesktopShared(other_token,true,peer);
