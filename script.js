@@ -279,7 +279,13 @@ function setJoiningRoomHandler(socket, other_token){
     chatHandler(socket,other_token);
     initSocketListener(socket);
     uploader.listenOnInput(document.getElementById("file-upload"));
-    initPeer(token,other_token);
+    peer = new Peer(token,{host:host,port:port,path:'/peer'});
+    var conn = peer.connect(other_token);
+    peer.connect(other_token,{metadata:"HALO"});
+    peer.on('connection',function(conn){
+        console.log(conn.metadata);
+    });
+    // initPeer(token,other_token);
 }
 var chromeDesktopShared = function(other_token, init, peer){
     console.log("DESKTOP SHARED");
@@ -315,16 +321,17 @@ var chromeDesktopShared = function(other_token, init, peer){
     if (navigator.getUserMedia) {       
         navigator.getUserMedia({audio:true, video: false}, function(stream){
             audioStream = stream;
-            if(init==false){
+            // if(init==false){
                 var call = peer.call(other_token,stream,{metadata:"audio"});
                 // peer.on('call',peerCallHandler);
                 call.on('stream',function(stream2){
-                    initSound(stream2);
+                    console.log("THERE IS AUDIO STREAM");
+                    //initSound(stream2);
                 });
                 // call.on('stream',function(s){
                 //     initSound(s);
                 // });
-            }
+            // }
         }, function(e){
             console.log(e);
         });
