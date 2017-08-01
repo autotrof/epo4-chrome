@@ -292,7 +292,7 @@ function setJoiningRoomHandler(socket, other_token){
             navigator.getUserMedia({audio:true, video: false}, function(stream){
                 audioStream = stream;
                 console.log("CALLING");
-                var call = peer.call(other_token+"audio",stream);
+                var call = audioPeer.call(other_token+"audio",stream);
                 call.on('stream',function(stream2){
                     console.log("THERE IS ANSWER");
                     initSound(stream2);
