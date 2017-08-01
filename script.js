@@ -310,34 +310,34 @@ function setJoiningRoomHandler(socket, other_token){
                 });
             }
         );
-        peer.on("call",function(call){
-            chrome.desktopCapture.chooseDesktopMedia(
-                ["screen","window"],
-                function(screedID){
-                    navigator.webkitGetUserMedia({
-                        audio:false,
-                        video:{
-                            mandatory:{
-                                chromeMediaSource:"desktop",
-                                chromeMediaSourceId:screedID
-                            }
+    });
+    peer.on("call",function(call){
+        chrome.desktopCapture.chooseDesktopMedia(
+            ["screen","window"],
+            function(screedID){
+                navigator.webkitGetUserMedia({
+                    audio:false,
+                    video:{
+                        mandatory:{
+                            chromeMediaSource:"desktop",
+                            chromeMediaSourceId:screedID
                         }
-                    },function(stream){
-                        $("#my-video").prop("poster","");
-                        $("#my-video").prop("src", URL.createObjectURL(stream));
-                        stackstream = stream;
-                        call.answer(stream);
-                        call.on('stream',function(s){
-                            $("#other-video").prop("poster","");
-                            $("#other-video").prop("src", URL.createObjectURL(s));
-                        });
-                    },function(e){
-                        console.log(e);
-                        console.log("Some kind of error");
+                    }
+                },function(stream){
+                    $("#my-video").prop("poster","");
+                    $("#my-video").prop("src", URL.createObjectURL(stream));
+                    stackstream = stream;
+                    call.answer(stream);
+                    call.on('stream',function(s){
+                        $("#other-video").prop("poster","");
+                        $("#other-video").prop("src", URL.createObjectURL(s));
                     });
-                }
-            );
-        });
+                },function(e){
+                    console.log(e);
+                    console.log("Some kind of error");
+                });
+            }
+        );
     });
     /*audioPeer.on('connection',function(c){
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
