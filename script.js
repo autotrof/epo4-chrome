@@ -12,6 +12,7 @@ var stackstream,audioStream;
 var token = parameters['token'];
 var initializer = false;
 var uploader;
+var socket,peer,audioPeer;
 var peerErrorHandler = function(err){
     switch (err.type){
         case 'browser-incompatible':
@@ -95,7 +96,6 @@ $(function(){
 $(document).ready(function(){
     var dosen_token,mahasiswa_token;
     var source1,source2;
-    var socket,peer;
     $("#btn-sound-trigger").css("color","gray");
     $("#btn-chat-trigger").click(function(){
 		if (chatState=="hidden") {
@@ -280,33 +280,14 @@ function setJoiningRoomHandler(socket, other_token){
     initSocketListener(socket);
     uploader.listenOnInput(document.getElementById("file-upload"));
     peer = new Peer(token,{host:host,port:port,path:'/peer'});
+    audioPeer = new Peer(token+"audio",{host:host,port:port,path:'/peer'});
     var conn = peer.connect(other_token);
-    peer.connect(other_token,{metadata:"audio"});
-    peer.on('connection',function(conn){
-        if (conn.metadata=='audio') {
-            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
-            if (navigator.getUserMedia) {       
-                navigator.getUserMedia({audio:true, video: false}, function(stream){
-                    audioStream = stream;
-                    // if(init==false){
-                        var call = peer.call(other_token,stream,{metadata:"audio"});
-                        // peer.on('call',peerCallHandler);
-                        call.on('stream',function(stream2){
-                            console.log("THERE IS AUDIO STREAM");
-                            console.log(stream2.metadata);
-                            //initSound(stream2);
-                        });
-                        // call.on('stream',function(s){
-                        //     initSound(s);
-                        // });
-                    // }
-                }, function(e){
-                    console.log(e);
-                });
-            }
-        }else{
-            console.log("NOT AUDIO");
-        }
+    var audioConn = audioPeer.connect(other_token+"audio");
+    peer.on('connection',function(c){
+        console.log("Video peer connect");
+    });
+    audioPeer.on('connection',function(c){
+        console.log("Audio peer connect");
     });
     // initPeer(token,other_token);
 }
