@@ -319,6 +319,7 @@ function setJoiningRoomHandler(socket, other_token){
     //     });
     // });
     audioPeer.on('connection',function(c){
+        console.log("There is connection");
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
         if (navigator.getUserMedia) {       
             navigator.getUserMedia({audio:true, video: false}, function(stream){
@@ -332,23 +333,23 @@ function setJoiningRoomHandler(socket, other_token){
             }, function(e){
                 console.log(e);
             });
-            audioPeer.on("call",function(call){
-                console.log("THERE IS CALL");
-                navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
-                if (navigator.getUserMedia) {       
-                    navigator.getUserMedia({audio:true, video: false}, function(stream){
-                        audioStream = stream;
-                        console.log("ANSWERING CALL");
-                        call.answer(stream);
-                        call.on('stream',function(stream2){
-                            initSound(stream2);
-                        })
-                    }, function(e){
-                        console.log(e);
-                    });
-                }
-            });
         }    
+    });
+    audioPeer.on("call",function(call){
+        console.log("THERE IS CALL");
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+        if (navigator.getUserMedia) {       
+            navigator.getUserMedia({audio:true, video: false}, function(stream){
+                audioStream = stream;
+                console.log("ANSWERING CALL");
+                call.answer(stream);
+                call.on('stream',function(stream2){
+                    initSound(stream2);
+                })
+            }, function(e){
+                console.log(e);
+            });
+        }
     });
     // initPeer(token,other_token);
 }
