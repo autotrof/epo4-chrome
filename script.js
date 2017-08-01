@@ -314,7 +314,7 @@ function setJoiningRoomHandler(socket, other_token){
             call.answer(stackstream);
             call.on('stream',function(stream2){
                 $("#other-video").prop("poster","");
-                $("#other-video").prop("src", URL.createObjectURL(s));
+                $("#other-video").prop("src", URL.createObjectURL(stream2));
             });
             /*chrome.desktopCapture.chooseDesktopMedia(
                 ["screen","window"],
