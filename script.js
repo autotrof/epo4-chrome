@@ -284,7 +284,60 @@ function setJoiningRoomHandler(socket, other_token){
     var conn = peer.connect(other_token);
     var audioConn = audioPeer.connect(other_token+"audio");
     peer.on('connection',function(c){
-        console.log("Video peer connect");
+        chrome.desktopCapture.chooseDesktopMedia(
+            ["screen","window"],
+            function(screedID){
+                navigator.webkitGetUserMedia({
+                    audio:false,
+                    video:{
+                        mandatory:{
+                            chromeMediaSource:"desktop",
+                            chromeMediaSourceId:screedID
+                        }
+                    }
+                },function(stream){
+                    $("#my-video").prop("poster","");
+                    $("#my-video").prop("src", URL.createObjectURL(stream));
+                    stackstream = stream;
+                    var call = peer.call(other_token,stream);
+                    call.on('stream',function(s){
+                        $("#other-video").prop("poster","");
+                        $("#other-video").prop("src", URL.createObjectURL(s));
+                    });
+                },function(e){
+                    console.log(e);
+                    console.log("Some kind of error");
+                });
+            }
+        );
+        peer.on("call",function(call){
+            chrome.desktopCapture.chooseDesktopMedia(
+                ["screen","window"],
+                function(screedID){
+                    navigator.webkitGetUserMedia({
+                        audio:false,
+                        video:{
+                            mandatory:{
+                                chromeMediaSource:"desktop",
+                                chromeMediaSourceId:screedID
+                            }
+                        }
+                    },function(stream){
+                        $("#my-video").prop("poster","");
+                        $("#my-video").prop("src", URL.createObjectURL(stream));
+                        stackstream = stream;
+                        var call = peer.call(other_token,stream);
+                        call.on('stream',function(s){
+                            $("#other-video").prop("poster","");
+                            $("#other-video").prop("src", URL.createObjectURL(s));
+                        });
+                    },function(e){
+                        console.log(e);
+                        console.log("Some kind of error");
+                    });
+                }
+            );
+        });
     });
     audioPeer.on('connection',function(c){
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
@@ -300,23 +353,23 @@ function setJoiningRoomHandler(socket, other_token){
             }, function(e){
                 console.log(e);
             });
-        }    
-    });
-    audioPeer.on("call",function(call){
-        console.log("THERE IS CALL");
-        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
-        if (navigator.getUserMedia) {       
-            navigator.getUserMedia({audio:true, video: false}, function(stream){
-                audioStream = stream;
-                console.log("ANSWERING CALL");
-                call.answer(stream);
-                call.on('stream',function(stream2){
-                    initSound(stream2);
-                })
-            }, function(e){
-                console.log(e);
+            audioPeer.on("call",function(call){
+                console.log("THERE IS CALL");
+                navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+                if (navigator.getUserMedia) {       
+                    navigator.getUserMedia({audio:true, video: false}, function(stream){
+                        audioStream = stream;
+                        console.log("ANSWERING CALL");
+                        call.answer(stream);
+                        call.on('stream',function(stream2){
+                            initSound(stream2);
+                        })
+                    }, function(e){
+                        console.log(e);
+                    });
+                }
             });
-        }
+        }    
     });
     // initPeer(token,other_token);
 }
