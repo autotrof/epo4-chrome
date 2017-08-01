@@ -281,9 +281,32 @@ function setJoiningRoomHandler(socket, other_token){
     uploader.listenOnInput(document.getElementById("file-upload"));
     peer = new Peer(token,{host:host,port:port,path:'/peer'});
     var conn = peer.connect(other_token);
-    peer.connect(other_token,{metadata:"HALO"});
+    peer.connect(other_token,{metadata:"audio"});
     peer.on('connection',function(conn){
-        console.log(conn.metadata);
+        if (conn.metadata=='audio') {
+            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+            if (navigator.getUserMedia) {       
+                navigator.getUserMedia({audio:true, video: false}, function(stream){
+                    audioStream = stream;
+                    // if(init==false){
+                        var call = peer.call(other_token,stream,{metadata:"audio"});
+                        // peer.on('call',peerCallHandler);
+                        call.on('stream',function(stream2){
+                            console.log("THERE IS AUDIO STREAM");
+                            console.log(stream2.metadata);
+                            //initSound(stream2);
+                        });
+                        // call.on('stream',function(s){
+                        //     initSound(s);
+                        // });
+                    // }
+                }, function(e){
+                    console.log(e);
+                });
+            }
+        }else{
+            console.log("NOT AUDIO");
+        }
     });
     // initPeer(token,other_token);
 }
