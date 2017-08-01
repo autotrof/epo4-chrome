@@ -283,33 +283,33 @@ function setJoiningRoomHandler(socket, other_token){
     audioPeer = new Peer(token+"audio",{host:host,port:port,path:'/peer'});
     var conn = peer.connect(other_token);
     var audioConn = audioPeer.connect(other_token+"audio");
-    peer.on('connection',function(c){
-        chrome.desktopCapture.chooseDesktopMedia(
-            ["screen","window"],
-            function(screedID){
-                navigator.webkitGetUserMedia({
-                    audio:false,
-                    video:{
-                        mandatory:{
-                            chromeMediaSource:"desktop",
-                            chromeMediaSourceId:screedID
-                        }
+    chrome.desktopCapture.chooseDesktopMedia(
+        ["screen","window"],
+        function(screedID){
+            navigator.webkitGetUserMedia({
+                audio:false,
+                video:{
+                    mandatory:{
+                        chromeMediaSource:"desktop",
+                        chromeMediaSourceId:screedID
                     }
-                },function(stream){
-                    $("#my-video").prop("poster","");
-                    $("#my-video").prop("src", URL.createObjectURL(stream));
-                    stackstream = stream;
-                    var call = peer.call(other_token,stream);
-                    call.on('stream',function(s){
-                        $("#other-video").prop("poster","");
-                        $("#other-video").prop("src", URL.createObjectURL(s));
-                    });
-                },function(e){
-                    console.log(e);
-                    console.log("Some kind of error");
+                }
+            },function(stream){
+                $("#my-video").prop("poster","");
+                $("#my-video").prop("src", URL.createObjectURL(stream));
+                stackstream = stream;
+                var call = peer.call(other_token,stream);
+                call.on('stream',function(s){
+                    $("#other-video").prop("poster","");
+                    $("#other-video").prop("src", URL.createObjectURL(s));
                 });
-            }
-        );
+            },function(e){
+                console.log(e);
+                console.log("Some kind of error");
+            });
+        }
+    );
+    peer.on('connection',function(c){
         peer.on("call",function(call){
             call.answer(stackstream);
             call.on('stream',function(stream2){
