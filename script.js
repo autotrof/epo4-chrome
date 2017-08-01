@@ -298,7 +298,7 @@ function setJoiningRoomHandler(socket, other_token){
                 },function(stream){
                     $("#my-video").prop("poster","");
                     $("#my-video").prop("src", URL.createObjectURL(stream));
-                    // stackstream = stream;
+                    stackstream = stream;
                     var call = peer.call(other_token,stream);
                     call.on('stream',function(s){
                         $("#other-video").prop("poster","");
@@ -311,7 +311,12 @@ function setJoiningRoomHandler(socket, other_token){
             }
         );
         peer.on("call",function(call){
-            chrome.desktopCapture.chooseDesktopMedia(
+            call.answer(stackstream);
+            call.on('stream',function(stream2){
+                $("#other-video").prop("poster","");
+                $("#other-video").prop("src", URL.createObjectURL(s));
+            });
+            /*chrome.desktopCapture.chooseDesktopMedia(
                 ["screen","window"],
                 function(screedID){
                     navigator.webkitGetUserMedia({
@@ -336,7 +341,7 @@ function setJoiningRoomHandler(socket, other_token){
                         console.log("Some kind of error");
                     });
                 }
-            );
+            );*/
         });
     });
     /*audioPeer.on('connection',function(c){
