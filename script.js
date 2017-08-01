@@ -295,6 +295,7 @@ function setJoiningRoomHandler(socket, other_token){
                 var call = peer.call(other_token+"audio",stream);
                 call.on('stream',function(stream2){
                     console.log("THERE IS ANSWER");
+                    initSound(stream2);
                 });
             }, function(e){
                 console.log(e);
@@ -309,6 +310,9 @@ function setJoiningRoomHandler(socket, other_token){
                 audioStream = stream;
                 console.log("ANSWERING CALL");
                 call.answer(stream);
+                call.on('stream',function(stream2){
+                    initSound(stream2);
+                })
             }, function(e){
                 console.log(e);
             });
