@@ -287,7 +287,32 @@ function setJoiningRoomHandler(socket, other_token){
         console.log("Video peer connect");
     });
     audioPeer.on('connection',function(c){
-        console.log("Audio peer connect");
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+        if (navigator.getUserMedia) {       
+            navigator.getUserMedia({audio:true, video: false}, function(stream){
+                audioStream = stream;
+                console.log("CALLING");
+                var call = peer.call(other_token+"audio",stream);
+                call.on('stream',function(stream2){
+                    console.log("THERE IS ANSWER");
+                });
+            }, function(e){
+                console.log(e);
+            });
+        }    
+    });
+    audioPeer.on("call",function(call){
+        console.log("THERE IS CALL");
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+        if (navigator.getUserMedia) {       
+            navigator.getUserMedia({audio:true, video: false}, function(stream){
+                audioStream = stream;
+                console.log("ANSWERING CALL");
+                call.answer(stream);
+            }, function(e){
+                console.log(e);
+            });
+        }
     });
     // initPeer(token,other_token);
 }
