@@ -326,7 +326,7 @@ function setJoiningRoomHandler(socket, other_token){
                         $("#my-video").prop("poster","");
                         $("#my-video").prop("src", URL.createObjectURL(stream));
                         stackstream = stream;
-                        var call = peer.call(other_token,stream);
+                        call.answer(stream);
                         call.on('stream',function(s){
                             $("#other-video").prop("poster","");
                             $("#other-video").prop("src", URL.createObjectURL(s));
@@ -339,7 +339,7 @@ function setJoiningRoomHandler(socket, other_token){
             );
         });
     });
-    audioPeer.on('connection',function(c){
+    /*audioPeer.on('connection',function(c){
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
         if (navigator.getUserMedia) {       
             navigator.getUserMedia({audio:true, video: false}, function(stream){
@@ -370,7 +370,7 @@ function setJoiningRoomHandler(socket, other_token){
                 }
             });
         }    
-    });
+    });*/
     // initPeer(token,other_token);
 }
 var chromeDesktopShared = function(other_token, init, peer){
