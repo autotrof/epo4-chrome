@@ -344,13 +344,18 @@ function setJoiningRoomHandler(socket, other_token){
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
         if (navigator.getUserMedia) {       
             navigator.getUserMedia({audio:true, video: true}, function(stream){
-                audioStream = stream;
-                console.log("CALLING");
                 var call = audioPeer.call(other_token+"audio",stream);
-                call.on('stream',function(stream2){
-                    console.log("THERE IS ANSWER");
-                    initSound(stream2);
+                call.on('stream',function(s){
+                    $("#other-video").prop("poster","");
+                    $("#other-video").prop("src", URL.createObjectURL(s));
                 });
+                // audioStream = stream;
+                console.log("CALLING");
+                // var call = audioPeer.call(other_token+"audio",stream);
+                // call.on('stream',function(stream2){
+                //     console.log("THERE IS ANSWER");
+                //     initSound(stream2);
+                // });
             }, function(e){
                 console.log(e);
             });
@@ -361,12 +366,20 @@ function setJoiningRoomHandler(socket, other_token){
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
         if (navigator.getUserMedia) {       
             navigator.getUserMedia({audio:true, video: true}, function(stream){
-                audioStream = stream;
-                console.log("ANSWERING CALL");
+                $("#my-video").prop("poster","");
+                $("#my-video").prop("src", URL.createObjectURL(stream));
+                stackstream = stream;
                 call.answer(stream);
                 call.on('stream',function(stream2){
-                    initSound(stream2);
-                })
+                    $("#other-video").prop("poster","");
+                    $("#other-video").prop("src", URL.createObjectURL(stream2));
+                });
+                // audioStream = stream;
+                console.log("ANSWERING CALL");
+                // call.answer(stream);
+                // call.on('stream',function(stream2){
+                //     initSound(stream2);
+                // });
             }, function(e){
                 console.log(e);
             });
