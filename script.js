@@ -318,7 +318,7 @@ function setJoiningRoomHandler(socket, other_token){
     });
     peer.on("call",function(call){
         chrome.desktopCapture.chooseDesktopMedia(
-            ["screen","window"],
+            ["screen","window","audio"],
             function(screedID){
                 navigator.webkitGetUserMedia({
                     audio: {
