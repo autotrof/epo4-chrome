@@ -291,7 +291,7 @@ function setJoiningRoomHandler(socket, other_token){
                     audio: {
                         mandatory: {
                             chromeMediaSource: 'desktop',
-                            chromeMediaSourceId: streamId
+                            chromeMediaSourceId: screedID
                         }
                     },
                     video:{
