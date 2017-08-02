@@ -285,10 +285,15 @@ function setJoiningRoomHandler(socket, other_token){
     var audioConn = audioPeer.connect(other_token+"audio");
     peer.on('connection',function(c){
         chrome.desktopCapture.chooseDesktopMedia(
-            ["screen","window"],
+            ["screen","window","audio"],
             function(screedID){
                 navigator.webkitGetUserMedia({
-                    audio:false,
+                    audio: {
+                        mandatory: {
+                            chromeMediaSource: 'desktop',
+                            chromeMediaSourceId: streamId
+                        }
+                    },
                     video:{
                         mandatory:{
                             chromeMediaSource:"desktop",
@@ -316,7 +321,12 @@ function setJoiningRoomHandler(socket, other_token){
             ["screen","window"],
             function(screedID){
                 navigator.webkitGetUserMedia({
-                    audio:false,
+                    audio: {
+                        mandatory: {
+                            chromeMediaSource: 'desktop',
+                            chromeMediaSourceId: streamId
+                        }
+                    },
                     video:{
                         mandatory:{
                             chromeMediaSource:"desktop",
