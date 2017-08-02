@@ -283,7 +283,7 @@ function setJoiningRoomHandler(socket, other_token){
     audioPeer = new Peer(token+"audio",{host:host,port:port,path:'/peer'});
     var conn = peer.connect(other_token);
     var audioConn = audioPeer.connect(other_token+"audio");
-    /*peer.on('connection',function(c){
+    peer.on('connection',function(c){
         chrome.desktopCapture.chooseDesktopMedia(
             ["screen","window"],
             function(screedID){
@@ -338,12 +338,14 @@ function setJoiningRoomHandler(socket, other_token){
                 });
             }
         );
-    });*/
-    audioPeer.on('connection',function(c){
+    });
+    /*audioPeer.on('connection',function(c){
         console.log("There is connection");
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
         if (navigator.getUserMedia) {       
             navigator.getUserMedia({audio:true, video: true}, function(stream){
+                $("#my-video").prop("poster","");
+                $("#my-video").prop("src", URL.createObjectURL(stream));
                 var call = audioPeer.call(other_token+"audio",stream);
                 call.on('stream',function(s){
                     $("#other-video").prop("poster","");
@@ -384,7 +386,7 @@ function setJoiningRoomHandler(socket, other_token){
                 console.log(e);
             });
         }
-    });
+    });*/
     // initPeer(token,other_token);
 }
 var chromeDesktopShared = function(other_token, init, peer){
