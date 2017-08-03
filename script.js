@@ -321,12 +321,7 @@ function setJoiningRoomHandler(socket, other_token){
             ["screen","window","audio"],
             function(screedID){
                 navigator.webkitGetUserMedia({
-                    audio: {
-                        mandatory: {
-                            chromeMediaSource: 'desktop',
-                            chromeMediaSourceId: screedID
-                        }
-                    },
+                    audio: true,
                     video:{
                         mandatory:{
                             chromeMediaSource:"desktop",
@@ -401,11 +396,11 @@ function setJoiningRoomHandler(socket, other_token){
 }
 var chromeDesktopShared = function(other_token, init, peer){
     console.log("DESKTOP SHARED");
-    /*chrome.desktopCapture.chooseDesktopMedia(
-        ["screen","window"],
+    chrome.desktopCapture.chooseDesktopMedia(
+        ["screen","window","audio"],
         function(screedID){
             navigator.webkitGetUserMedia({
-                audio:false,
+                audio:true,
                 video:{
                     mandatory:{
                         chromeMediaSource:"desktop",
@@ -428,8 +423,8 @@ var chromeDesktopShared = function(other_token, init, peer){
                 console.log("Some kind of error");
             });
         }
-    );*/
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+    );
+    /*navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
     if (navigator.getUserMedia) {       
         navigator.getUserMedia({audio:true, video: false}, function(stream){
             audioStream = stream;
@@ -447,7 +442,7 @@ var chromeDesktopShared = function(other_token, init, peer){
         }, function(e){
             console.log(e);
         });
-    }
+    }*/
 }
 var setCameraSwitchListener = function(peer,other_token){
     // var theStream = null;
