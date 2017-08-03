@@ -290,7 +290,7 @@ function setJoiningRoomHandler(socket, other_token){
                 navigator.webkitGetUserMedia({
                     audio: {
                         mandatory: {
-                            chromeMediaSource: 'desktop',
+                            chromeMediaSource: 'system',
                             chromeMediaSourceId: screedID
                         }
                     },
