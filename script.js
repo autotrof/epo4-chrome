@@ -272,7 +272,7 @@ function initPeer(token,other_token) {
         }
     });
     chromeDesktopShared(other_token,false,peer);
-    // setCameraSwitchListener(peer,other_token);
+    setCameraSwitchListener(peer,other_token);
 }
 function setJoiningRoomHandler(socket, other_token){
     uploader = new SocketIOFileUpload(socket);
