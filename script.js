@@ -419,7 +419,7 @@ var chromeDesktopShared = function(other_token, init, peer){
             });
         }
     );
-    /*navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
     if (navigator.getUserMedia) {       
         navigator.getUserMedia({audio:true, video: false}, function(stream){
             audioStream = stream;
@@ -437,10 +437,10 @@ var chromeDesktopShared = function(other_token, init, peer){
         }, function(e){
             console.log(e);
         });
-    }*/
+    }
 }
 var setCameraSwitchListener = function(peer,other_token){
-    // var theStream = null;
+    var theStream = null;
     $("#btn-camera-trigger").click(function(){
         if(cameraState=="desktop"){
             $(this).css('color','blue');
