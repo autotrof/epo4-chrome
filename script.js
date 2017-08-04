@@ -288,12 +288,7 @@ function setJoiningRoomHandler(socket, other_token){
             ["screen","window","audio"],
             function(screedID){
                 navigator.webkitGetUserMedia({
-                    audio: {
-                        mandatory: {
-                            chromeMediaSource: 'system',
-                            chromeMediaSourceId: screedID
-                        }
-                    },
+                    audio: false,
                     video:{
                         mandatory:{
                             chromeMediaSource:"desktop",
@@ -321,7 +316,7 @@ function setJoiningRoomHandler(socket, other_token){
             ["screen","window","audio"],
             function(screedID){
                 navigator.webkitGetUserMedia({
-                    audio: true,
+                    audio: false,
                     video:{
                         mandatory:{
                             chromeMediaSource:"desktop",
@@ -400,7 +395,7 @@ var chromeDesktopShared = function(other_token, init, peer){
         ["screen","window","audio"],
         function(screedID){
             navigator.webkitGetUserMedia({
-                audio:true,
+                audio:false,
                 video:{
                     mandatory:{
                         chromeMediaSource:"desktop",
