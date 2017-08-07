@@ -84,9 +84,6 @@ var chatHandler = function(socket,other_token){
         }
     });
 }
-var socketStopBimbinganHandler = function(data){
-    window.close();
-}
 
 $(function(){
 	$("#chat-section").css('width',chatSectionWidth);
@@ -126,13 +123,6 @@ $(document).ready(function(){
 			myVideoState = "minimize";
 		}
 	});
-	$("#btn-stop-trigger").click(function(){
-		var _c = confirm("Anda yakin akan mengakhiri sesi ini ?");
-		if(_c===true){
-			$(this).css('color','red');
-            window.close();
-		}
-	});
     //MAHASISWA
     if(parameters['as']=='mahasiswa'){
     	$(".shadow").remove();
@@ -143,7 +133,14 @@ $(document).ready(function(){
         socket.on("joining room response",function(res){
             setJoiningRoomHandler(socket,dosen_token);
         });
-        socket.on("stop bimbingan",socketStopBimbinganHandler);
+        $("#btn-stop-trigger").click(function(){
+            var _c = confirm("Anda yakin akan mengakhiri sesi ini ?");
+            if(_c===true){
+                $(this).css('color','red');
+                socket.emit("stop bimbingan",true);
+                // window.close();
+            }
+        });
     }
     //DOSEN
     else if(parameters['as']=='dosen'){
@@ -153,7 +150,6 @@ $(document).ready(function(){
                 $("#list-mahasiswa").append("<option value='"+obj.token+"'>"+obj.nama+"</option>");
             });
         });
-        socket.on("stop bimbingan",socketStopBimbinganHandler);
         $("#btn-connect").on('click',function(){
         	mahasiswa_token = $("#list-mahasiswa").val();
         	$(".shadow").remove();
@@ -162,6 +158,14 @@ $(document).ready(function(){
         });
         socket.on("joining room response",function(mahasiswa_token){
             setJoiningRoomHandler(socket,mahasiswa_token);
+        });
+        $("#btn-stop-trigger").click(function(){
+            var _c = confirm("Anda yakin akan mengakhiri sesi ini ?");
+            if(_c===true){
+                $(this).css('color','red');
+                socket.emit("stop bimbingan",true);
+                // window.close();
+            }
         });
     }
     socket.on("older message",olderMessageHandler);
@@ -388,6 +392,11 @@ function setJoiningRoomHandler(socket, other_token){
         }
     });*/
     // initPeer(token,other_token);
+    setCameraSwitchListener(peer,other_token);
+    socket.on("stop bimbingan",function(data){
+        peer.disconnect();
+        window.close();
+    });
 }
 var chromeDesktopShared = function(other_token, init, peer){
     console.log("DESKTOP SHARED");
